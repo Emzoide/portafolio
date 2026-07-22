@@ -57,6 +57,27 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
 
   const [activa, setActiva] = useState(0)
   const [vertical, setVertical] = useState(false)
+  const [compacto, setCompacto] = useState(false)
+  const [abierto, setAbierto] = useState(false)
+
+  // En móvil no hay margen que gastar en un raíl lateral.
+  useEffect(() => {
+    const mq = matchMedia("(max-width: 980px)")
+    const mirar = () => setCompacto(mq.matches)
+    mirar()
+    mq.addEventListener("change", mirar)
+    return () => mq.removeEventListener("change", mirar)
+  }, [])
+
+  // Al tocar fuera, la gota se cierra sola.
+  useEffect(() => {
+    if (!abierto) return
+    const fuera = (e: PointerEvent) => {
+      if (!barra.current?.contains(e.target as Node)) setAbierto(false)
+    }
+    document.addEventListener("pointerdown", fuera)
+    return () => document.removeEventListener("pointerdown", fuera)
+  }, [abierto])
 
   // Qué sección manda según el scroll.
   useEffect(() => {
@@ -121,34 +142,30 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
   }, [])
 
   /**
-   * El vuelo de arriba al costado (técnica FLIP): se mide dónde estaba la barra
-   * antes del cambio de disposición y se la anima desde ahí hasta su sitio
-   * nuevo. Sin esto desaparece de un sitio y aparece en otro, que es justo lo
-   * que rompe la ilusión.
+   * El cambio de arriba al costado: no viaja, nace.
    *
-   * Solo se traslada, nunca se escala: escalar aplastaría el texto.
+   * Antes cruzaba la pantalla con la técnica FLIP y era un movimiento largo
+   * que llamaba demasiado la atención para lo poco que aportaba. Ahora la barra
+   * aparece creciendo desde una gota, con un punto de sobreimpulso — el splash.
+   * Se escala desde el borde por el que entra, así que parece brotar de ahí.
    */
-  const cajaPrevia = useRef<DOMRect | null>(null)
+  const primeraVez = useRef(true)
   useLayoutEffect(() => {
     const nav = barra.current
     if (!nav) return
-    const ahora = nav.getBoundingClientRect()
-    const antes = cajaPrevia.current
-    cajaPrevia.current = ahora
-    if (!antes || matchMedia("(prefers-reduced-motion: reduce)").matches) return
-
-    const dx = antes.left + antes.width / 2 - (ahora.left + ahora.width / 2)
-    const dy = antes.top + antes.height / 2 - (ahora.top + ahora.height / 2)
-    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return
+    if (primeraVez.current) {
+      primeraVez.current = false
+      return
+    }
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return
 
     nav.animate(
       [
-        { transform: `translate(${dx}px, ${dy}px)`, opacity: 0.55 },
-        { transform: "translate(0, 0)", opacity: 1 },
+        { transform: "scale(0.26)", opacity: 0, filter: "blur(6px)", offset: 0 },
+        { transform: "scale(1.06)", opacity: 1, filter: "blur(0px)", offset: 0.62 },
+        { transform: "scale(1)", opacity: 1, filter: "blur(0px)", offset: 1 },
       ],
-      // Sin rebote y más largo: el vuelo antes se sentía violento porque la
-      // curva sobrepasaba el destino. Aquí solo desacelera.
-      { duration: 820, easing: "cubic-bezier(0.22, 0.68, 0.24, 1)" },
+      { duration: 520, easing: "cubic-bezier(0.3, 0.9, 0.3, 1)" },
     )
   }, [vertical])
 
@@ -243,16 +260,37 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
     pulso.current = 0.72
     objetivo.current = i
     setActiva(i)
+    setAbierto(false)
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
   }, [])
 
+  const recogida = vertical && compacto
+
   return (
-    <div className="navwrap" data-modo={vertical ? "vertical" : "horizontal"}>
+    <div
+      className="navwrap"
+      data-modo={vertical ? "vertical" : "horizontal"}
+      data-compacto={recogida ? "si" : undefined}
+      data-abierto={recogida && abierto ? "si" : undefined}
+    >
       <div className="nav glass" ref={barra}>
         <span className="mark">
           {nombre}
           <i>.</i>
         </span>
+
+        {/* Solo en móvil: la barra se recoge en una gota que se abre al tocarla.
+            Es el propio comportamiento de Liquid Glass — un control que se
+            transforma en menú — y no roba pantalla en un teléfono. */}
+        <button
+          type="button"
+          className="pomo"
+          aria-expanded={abierto}
+          aria-label={abierto ? "Cerrar el índice" : "Abrir el índice"}
+          onClick={() => setAbierto((v) => !v)}
+        >
+          <span className="pomopunto" aria-hidden="true" />
+        </button>
 
         <nav>
           <span className="gota rastro" ref={rastro} aria-hidden="true" />

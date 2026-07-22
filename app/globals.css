@@ -415,25 +415,84 @@
   font-size: 13px;
 }
 
-@media (max-width: 980px) {
-  /* Sin sitio en el margen: se queda arriba y no estorba. */
-  .navwrap[data-modo="vertical"] {
-    position: sticky;
-    top: 16px;
-    left: auto;
-    transform: none;
-    justify-content: center;
-  }
-  .navwrap[data-modo="vertical"] .nav {
-    flex-direction: row;
-    align-items: center;
-    gap: 24px;
-    padding: 8px 9px 8px 19px;
-    border-radius: 999px;
-  }
-  .navwrap[data-modo="vertical"] .nav nav {
-    flex-direction: row;
-  }
+/* El pomo: la gota que recoge la barra en móvil. Fuera de ahí no existe. */
+.pomo {
+  display: none;
+}
+
+/* Móvil, pasado el hero: la barra se recoge en una gota abajo a la derecha.
+   Un raíl lateral en un teléfono se come la pantalla; una gota no molesta y
+   sigue estando a mano — es el propio Liquid Glass, un control que se abre
+   en menú cuando hace falta. */
+.navwrap[data-compacto="si"] {
+  position: fixed;
+  top: auto;
+  bottom: max(18px, env(safe-area-inset-bottom));
+  right: 18px;
+  left: auto;
+  transform: none;
+  padding-top: 0;
+  justify-content: flex-end;
+}
+.navwrap[data-compacto="si"] .nav {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0;
+  padding: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  overflow: hidden;
+  transition:
+    width 0.42s cubic-bezier(0.3, 0.9, 0.3, 1),
+    height 0.42s cubic-bezier(0.3, 0.9, 0.3, 1),
+    padding 0.42s cubic-bezier(0.3, 0.9, 0.3, 1),
+    border-radius 0.42s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+.navwrap[data-compacto="si"] .mark,
+.navwrap[data-compacto="si"] .cta,
+.navwrap[data-compacto="si"] .nav nav {
+  display: none;
+}
+.navwrap[data-compacto="si"] .pomo {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  flex: none;
+}
+.pomopunto {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 5px color-mix(in srgb, var(--accent) 16%, transparent);
+  transition: transform 0.3s cubic-bezier(0.3, 1.2, 0.4, 1);
+}
+.navwrap[data-abierto="si"] .pomopunto {
+  transform: scale(0.55);
+}
+
+/* Abierta: la gota se estira en tarjeta con el índice dentro. */
+.navwrap[data-compacto="si"][data-abierto="si"] .nav {
+  width: 190px;
+  height: auto;
+  padding: 8px;
+  border-radius: 22px;
+}
+.navwrap[data-compacto="si"][data-abierto="si"] .nav nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  order: -1;
+}
+.navwrap[data-compacto="si"][data-abierto="si"] .nav nav a {
+  padding: 10px 14px;
+  font-size: 14px;
 }
 .nav .mark {
   font-family: var(--font-display), Georgia, serif;
