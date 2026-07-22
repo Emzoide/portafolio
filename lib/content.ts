@@ -283,10 +283,12 @@ export const trayectoria = {
 }
 
 export const sobreMi = {
-  titulo: "Aprendí a programar resolviendo problemas que tenía delante",
+  titulo: "El trabajo de una persona debería ser pensar, no hacer",
   parrafos: [
-    "Soy bachiller en Ingeniería de Sistemas por la Universidad Tecnológica del Perú y trabajo en Interamericana Norte desde 2024, donde entré como practicante y hoy estoy en investigación y desarrollo. Casi todo lo que sé lo aprendí construyendo cosas que alguien necesitaba el lunes.",
-    "Me interesa el punto donde un proceso deja de hacerse a mano. No la tecnología por sí sola: el momento en que una persona deja de copiar datos de una pantalla a otra y puede dedicarse a algo que sí requiere criterio.",
+    "Me cuesta dar algo por terminado. Cuando miro un sistema que ya funciona, lo que encuentro son aristas: lo que todavía se le puede agregar para que el proceso sea mejor. Completo no llega a estar nunca, porque siempre aparece algo nuevo — y esa es justamente la parte que me gusta.",
+    "De ahí sale mi forma de trabajar. Cuando alguien se pasa la mañana copiando datos de una pantalla a otra, no está usando lo único que una máquina no le puede dar, que es criterio. Mi trabajo es quitarle esa mañana de encima.",
+    "En los encargos por mi cuenta eso se vuelve más claro todavía: quien me contrata tiene un negocio que atender, no un sistema que operar. Así que la pregunta que me hago, y me la hago muchas veces seguidas, es qué arista falta para que la operación siga sola y lo único que quede sobre su mesa sea lo que de verdad necesita su cabeza.",
+    "Soy bachiller en Ingeniería de Sistemas por la Universidad Tecnológica del Perú. Casi todo lo demás lo aprendí construyendo cosas que alguien necesitaba el lunes.",
   ],
   cierre: "¿Tienes un proceso que todavía se hace a mano?",
 }
