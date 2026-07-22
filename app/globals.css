@@ -323,25 +323,40 @@
   z-index: 1;
   padding: 5px 13px;
   border-radius: 999px;
+  transition: color 0.25s ease;
 }
-.nav nav a[aria-current] {
+.nav nav a[aria-current],
+.nav nav a:hover {
   color: var(--mist);
 }
 
-/* La gota. Se mueve con muelle desde el JS, que también la estira en la
-   dirección del viaje — eso es lo que la hace parecer líquida y no un
-   rectángulo deslizándose. */
+/* La gota. La mueve el muelle del JS, que además la estira en la dirección del
+   viaje. Cápsula, como manda la geometría de Liquid Glass.
+   Antes iba al 13% de tinte y sobre el vidrio no se veía: ahora tiene cuerpo,
+   canto encendido y sombra propia, para que se lea como un objeto y no como
+   una mancha. */
 .gota {
   position: absolute;
   left: 0;
   top: 0;
   border-radius: 999px;
   pointer-events: none;
-  background: color-mix(in srgb, var(--mist) 13%, transparent);
+  background: color-mix(in srgb, var(--mist) 26%, transparent);
   box-shadow:
-    inset 0 1px 0 var(--glass-edge),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    0 4px 14px -6px rgba(0, 0, 0, 0.6);
   will-change: transform;
+}
+
+/* El rastro: la misma gota, más lenta y más tenue. En reposo queda debajo y no
+   se nota; solo se separa cuando hay velocidad de verdad. El JS le controla la
+   opacidad según cuánto se haya quedado atrás. */
+.gota.rastro {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+  box-shadow: none;
+  filter: blur(5px);
+  opacity: 0;
 }
 
 /* Pasado el hero la barra se va al lateral: la misma guía, girada.

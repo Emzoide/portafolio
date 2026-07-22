@@ -1,20 +1,23 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react"
 
 /**
- * La barra, con una gota que persigue la sección activa.
+ * La barra, con una gota que persigue al puntero.
  *
- * Lo que hace que se lea como líquido no es fundirse con nada: es estirarse.
- * La cápsula se alarga en la dirección en que viaja, en proporción a su
- * velocidad, y se recompone al llegar. Eso, más un muelle con rebote en vez de
- * una transición lineal, es toda la ilusión.
+ * La clave: la gota NO sigue a la sección activa, sigue a tu mano. Como en
+ * iOS, donde mantienes el dedo en un menú y la gota va detrás. Al soltar el
+ * ratón vuelve sola a la sección en la que estás.
+ *
+ * Se lee como líquido por tres cosas a la vez:
+ *  - muelle con rebote en lugar de transición lineal;
+ *  - se estira en la dirección del viaje y adelgaza en la perpendicular,
+ *    conservando el volumen;
+ *  - deja un rastro: una segunda gota más lenta y tenue que la persigue y solo
+ *    se separa cuando hay velocidad de verdad.
  *
  * (La técnica gooey clásica —desenfocar y endurecer el alfa con feColorMatrix—
- * exige fondo opaco, así que sobre vidrio transparente no se puede usar.)
- *
- * Pasado el hero la barra deja de estar arriba y se convierte en un raíl
- * vertical pegado a la izquierda: la misma guía, girada.
+ * exige fondo opaco, así que sobre vidrio transparente no sirve.)
  */
 
 const SECCIONES = [
@@ -23,18 +26,23 @@ const SECCIONES = [
   { id: "contacto", texto: "Contacto" },
 ]
 
-const MUELLE = 0.16 // tirón hacia el destino
-const ROCE = 0.72 // cuánto se frena: más bajo, más rebote
-const ESTIRA = 0.02 // cuánto alarga por unidad de velocidad
+const MUELLE = 0.19
+const ROCE = 0.7
+const ESTIRA = 0.024
+const MUELLE_RASTRO = 0.1 // más flojo: por eso se queda atrás
 
 export function Navegacion({ correo, nombre }: { correo: string; nombre: string }) {
   const barra = useRef<HTMLDivElement>(null)
   const gota = useRef<HTMLSpanElement>(null)
+  const rastro = useRef<HTMLSpanElement>(null)
   const enlaces = useRef<(HTMLAnchorElement | null)[]>([])
+  const objetivo = useRef(0) // a quién persigue ahora mismo
+  const pulso = useRef(1) // 1 en reposo; baja al pulsar
+
   const [activa, setActiva] = useState(0)
   const [vertical, setVertical] = useState(false)
 
-  // Scrollspy: qué sección manda ahora mismo.
+  // Qué sección manda según el scroll.
   useEffect(() => {
     const vistos = new Map<string, number>()
     const obs = new IntersectionObserver(
@@ -51,7 +59,7 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
         })
         if (ratio > 0) setActiva(mejor)
       },
-      { threshold: [0, 0.15, 0.35, 0.6, 0.9], rootMargin: "-15% 0px -35% 0px" },
+      { threshold: [0, 0.2, 0.5, 0.8], rootMargin: "-15% 0px -35% 0px" },
     )
     SECCIONES.forEach((s) => {
       const el = document.getElementById(s.id)
@@ -60,27 +68,23 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
     return () => obs.disconnect()
   }, [])
 
+  // Sin hover, la gota vuelve a la sección activa.
+  useEffect(() => {
+    objetivo.current = activa
+  }, [activa])
+
   /**
-   * Pasado el hero, la barra se va al lateral.
-   *
-   * Por posición de scroll y no por IntersectionObserver a propósito: si el
-   * observador no dispara, la barra se quedaría clavada en vertical encima de
-   * la portada. Comparar dos números no falla nunca, y hay histéresis para que
-   * no parpadee justo en el umbral.
+   * Pasado el hero la barra se va al lateral. Por posición de scroll y no por
+   * IntersectionObserver: si el observador no disparara, se quedaría clavada
+   * en vertical encima de la portada. La histéresis evita el parpadeo.
    */
   useEffect(() => {
     const hero = document.querySelector<HTMLElement>(".atmos")
     if (!hero) return
-
     const mirar = () => {
       const limite = hero.offsetHeight - 90
-      setVertical((antes) => {
-        const y = window.scrollY
-        if (antes) return y > limite - 120
-        return y > limite
-      })
+      setVertical((antes) => (antes ? window.scrollY > limite - 130 : window.scrollY > limite))
     }
-
     mirar()
     window.addEventListener("scroll", mirar, { passive: true })
     window.addEventListener("resize", mirar)
@@ -90,94 +94,126 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
     }
   }, [])
 
-  // El muelle. Persigue al enlace activo y se deforma con su propia velocidad.
+  /**
+   * El vuelo de arriba al costado (técnica FLIP): se mide dónde estaba la barra
+   * antes del cambio de disposición y se la anima desde ahí hasta su sitio
+   * nuevo. Sin esto desaparece de un sitio y aparece en otro, que es justo lo
+   * que rompe la ilusión.
+   *
+   * Solo se traslada, nunca se escala: escalar aplastaría el texto.
+   */
+  const cajaPrevia = useRef<DOMRect | null>(null)
+  useLayoutEffect(() => {
+    const nav = barra.current
+    if (!nav) return
+    const ahora = nav.getBoundingClientRect()
+    const antes = cajaPrevia.current
+    cajaPrevia.current = ahora
+    if (!antes || matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
+    const dx = antes.left + antes.width / 2 - (ahora.left + ahora.width / 2)
+    const dy = antes.top + antes.height / 2 - (ahora.top + ahora.height / 2)
+    if (Math.abs(dx) < 2 && Math.abs(dy) < 2) return
+
+    nav.animate(
+      [
+        { transform: `translate(${dx}px, ${dy}px)`, opacity: 0.55 },
+        { transform: "translate(0, 0)", opacity: 1 },
+      ],
+      { duration: 640, easing: "cubic-bezier(0.32, 1.14, 0.36, 1)" },
+    )
+  }, [vertical])
+
+  // El muelle. Un bucle vivo mientras la barra exista.
   useEffect(() => {
-    if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      const el = enlaces.current[activa]
-      const g = gota.current
-      if (el && g) {
-        g.style.transform = vertical
-          ? `translateY(${el.offsetTop}px)`
-          : `translateX(${el.offsetLeft}px)`
-        g.style.width = `${el.offsetWidth}px`
-        g.style.height = `${el.offsetHeight}px`
-      }
-      return
-    }
+    const suave = !matchMedia("(prefers-reduced-motion: reduce)").matches
 
     let pos = 0
     let vel = 0
-    let corriendo = true
+    let posR = 0 // el rastro
     let arrancado = false
+    let vivo = true
 
-    /**
-     * Colocación inmediata, sin esperar al primer fotograma. Si la pestaña
-     * está en segundo plano requestAnimationFrame no dispara, y sin esto la
-     * gota nacería sin tamaño ni posición y no se vería nada.
-     */
-    const inicial = enlaces.current[activa]
-    if (inicial && gota.current) {
-      pos = vertical ? inicial.offsetTop : inicial.offsetLeft
-      arrancado = true
-      gota.current.style.width = `${inicial.offsetWidth}px`
-      gota.current.style.height = `${inicial.offsetHeight}px`
-      gota.current.style.transform = vertical
-        ? `translateY(${pos}px)`
-        : `translateX(${pos}px)`
-    }
-
-    const marco = () => {
-      if (!corriendo) return
-      const el = enlaces.current[activa]
+    const colocar = () => {
+      const el = enlaces.current[objetivo.current]
       const g = gota.current
-      if (!el || !g) {
-        requestAnimationFrame(marco)
-        return
-      }
+      const r = rastro.current
+      if (!el || !g) return
 
       const destino = vertical ? el.offsetTop : el.offsetLeft
       if (!arrancado) {
         pos = destino
+        posR = destino
         arrancado = true
       }
 
-      vel += (destino - pos) * MUELLE
-      vel *= ROCE
-      pos += vel
+      if (suave) {
+        vel += (destino - pos) * MUELLE
+        vel *= ROCE
+        pos += vel
+        posR += (pos - posR) * MUELLE_RASTRO
+      } else {
+        pos = destino
+        posR = destino
+        vel = 0
+      }
 
-      // Estirada en la dirección del viaje, encogida en la perpendicular:
-      // el volumen se conserva, que es lo que lo hace parecer una gota.
-      const tension = Math.min(Math.abs(vel) * ESTIRA, 0.42)
-      const largo = 1 + tension
-      const ancho = 1 - tension * 0.55
+      // Estirada en la dirección del viaje, adelgazada en la perpendicular:
+      // el volumen se conserva y por eso parece una gota y no un rectángulo.
+      const tension = Math.min(Math.abs(vel) * ESTIRA, 0.5)
+      const largo = (1 + tension) * pulso.current
+      const ancho = (1 - tension * 0.55) * pulso.current
 
-      g.style.width = `${el.offsetWidth}px`
-      g.style.height = `${el.offsetHeight}px`
+      const w = el.offsetWidth
+      const h = el.offsetHeight
+      g.style.width = `${w}px`
+      g.style.height = `${h}px`
       g.style.transform = vertical
         ? `translateY(${pos}px) scale(${ancho}, ${largo})`
         : `translateX(${pos}px) scale(${largo}, ${ancho})`
 
+      if (r) {
+        const desfase = Math.min(Math.abs(pos - posR) / 60, 1)
+        r.style.width = `${w}px`
+        r.style.height = `${h}px`
+        r.style.opacity = `${desfase * 0.5}`
+        r.style.transform = vertical
+          ? `translateY(${posR}px) scale(${ancho}, ${largo})`
+          : `translateX(${posR}px) scale(${largo}, ${ancho})`
+      }
+
+      // El pulso del clic vuelve solo a su sitio.
+      pulso.current += (1 - pulso.current) * 0.18
+    }
+
+    colocar() // sin esperar al primer fotograma, por si la pestaña está oculta
+
+    const marco = () => {
+      if (!vivo) return
+      colocar()
       requestAnimationFrame(marco)
     }
-
     const id = requestAnimationFrame(marco)
+
     return () => {
-      corriendo = false
+      vivo = false
       cancelAnimationFrame(id)
     }
-  }, [activa, vertical])
+  }, [vertical])
 
-  // Al pulsar: la gota se encoge, rebota y lleva a la sección.
+  const perseguir = useCallback((i: number) => {
+    objetivo.current = i
+  }, [])
+  const soltar = useCallback(() => {
+    objetivo.current = activa
+  }, [activa])
+
+  // Al pulsar: la gota se encoge de golpe y el muelle la devuelve, hinchada.
   const ir = useCallback((e: React.MouseEvent<HTMLAnchorElement>, id: string, i: number) => {
     e.preventDefault()
+    pulso.current = 0.72
+    objetivo.current = i
     setActiva(i)
-    const g = gota.current
-    if (g && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      g.animate(
-        [{ filter: "brightness(1.5)" }, { filter: "brightness(1)" }],
-        { duration: 420, easing: "ease-out" },
-      )
-    }
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })
   }, [])
 
@@ -189,7 +225,8 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
           <i>.</i>
         </span>
 
-        <nav>
+        <nav onPointerLeave={soltar}>
+          <span className="gota rastro" ref={rastro} aria-hidden="true" />
           <span className="gota" ref={gota} aria-hidden="true" />
           {SECCIONES.map((s, i) => (
             <a
@@ -199,6 +236,9 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
                 enlaces.current[i] = el
               }}
               aria-current={activa === i ? "true" : undefined}
+              onPointerEnter={() => perseguir(i)}
+              onFocus={() => perseguir(i)}
+              onBlur={soltar}
               onClick={(e) => ir(e, s.id, i)}
             >
               {s.texto}
