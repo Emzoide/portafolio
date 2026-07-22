@@ -835,14 +835,22 @@
    eso es lo que convierte una cara en cliché. Aquí es una persona, no un avatar. */
 
 .retratowrap {
+  /* Forma del retrato: 50% para círculo, 14px para rectángulo editorial.
+     Cambiar estos dos valores es todo lo que hace falta para alternar. */
+  --retrato-radio: 50%;
+  --retrato-proporcion: 1 / 1;
+
   margin: 0;
-  max-width: 360px;
+  /* Limitado a 240px porque el archivo es de 400x400: a mayor tamaño se ve
+     blando en pantallas de alta densidad. Sube a 330 en cuanto haya un
+     original de 900px o más. */
+  max-width: 240px;
   justify-self: end;
   width: 100%;
 }
 .retratowrap figcaption {
-  margin-top: 14px;
-  text-align: right;
+  margin-top: 16px;
+  text-align: center;
 }
 
 /* Sobre mí: la trayectoria en dos vías ---------------------------------- */
@@ -923,24 +931,39 @@
 
 .retrato {
   position: relative;
-  aspect-ratio: 4 / 5;
-  border-radius: 14px;
+  aspect-ratio: var(--retrato-proporcion, 4 / 5);
+  border-radius: var(--retrato-radio, 14px);
   overflow: hidden;
-  border: 1px solid var(--hair);
-  /* Negro puro para que el recorte funda sin costura con el `screen` de arriba */
-  background: #000;
+  background: var(--steel);
+  /* Anillo fino más un halo muy tenue: asienta la foto en la atmósfera sin
+     convertirla en la bombilla de la página. */
+  box-shadow:
+    inset 0 0 0 1px var(--hair-2),
+    0 24px 54px -26px rgba(0, 0, 0, 0.9);
 }
 .retrato img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 12%;
-  /* La foto es un recorte sobre negro. `screen` hace que ese negro desaparezca
-     contra el fondo, así que la figura emerge de la atmósfera en lugar de venir
-     dentro de una caja. La gradación fría evita que los tonos cálidos de la
-     ropa peleen con el acero. */
-  mix-blend-mode: screen;
-  filter: saturate(0.58) contrast(1.04) brightness(0.96) hue-rotate(-6deg);
+  object-position: center 22%;
+  /* Gradación fría: baja el calor del fondo y de la piel lo justo para que la
+     foto pertenezca a la paleta en vez de pelearse con ella. */
+  filter: saturate(0.66) contrast(1.05) brightness(0.95) hue-rotate(-8deg);
+}
+/* El borde inferior se funde con el fondo para que el retrato no flote como
+   un recorte pegado encima. */
+.retrato::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 52%,
+    color-mix(in srgb, var(--deep) 42%, transparent) 88%,
+    color-mix(in srgb, var(--deep) 68%, transparent) 100%
+  );
 }
 .retrato .falta {
   position: absolute;

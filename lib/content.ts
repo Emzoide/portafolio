@@ -16,9 +16,8 @@ export const perfil = {
   whatsapp: "https://wa.me/51920461960",
   disponible: "Piura · disponible para conversar",
   respuesta: "Suelo responder el mismo día.",
-  // Recorte sobre fondo negro: el CSS lo funde con la atmósfera.
   // Mientras esté vacío se muestra el hueco marcado como pendiente.
-  retrato: "/eduardo-profile.jpg",
+  retrato: "/retrato.jpeg",
 }
 
 export const titular = {
