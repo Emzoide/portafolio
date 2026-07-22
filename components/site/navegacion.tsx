@@ -26,10 +26,26 @@ const SECCIONES = [
   { id: "contacto", texto: "Contacto" },
 ]
 
-const MUELLE = 0.19
-const ROCE = 0.7
-const ESTIRA = 0.024
-const MUELLE_RASTRO = 0.1 // más flojo: por eso se queda atrás
+/**
+ * Muelle de verdad, con los parámetros que usa Apple.
+ *
+ * `response` es lo que tarda en llegar y `amortiguacion` cuánto rebota: a 1 no
+ * rebota nada. El interactiveSpring de SwiftUI —el que persigue el dedo— va con
+ * response 0.15 y amortiguación 0.86, o sea casi crítico. Antes tenía un muelle
+ * inventado mucho más suelto, y por eso rebotaba de forma rara: la sensación
+ * líquida viene del estiramiento, no de la oscilación.
+ */
+const RESPUESTA = 0.2
+const AMORTIGUACION = 0.86
+const RESPUESTA_RASTRO = 0.34 // más lento: por eso se descuelga
+const ESTIRA = 0.0016 // por px/s de velocidad
+
+function paso(pos: number, vel: number, destino: number, respuesta: number, dt: number) {
+  const w = (2 * Math.PI) / respuesta
+  const a = -w * w * (pos - destino) - 2 * AMORTIGUACION * w * vel
+  const v = vel + a * dt
+  return { pos: pos + v * dt, vel: v }
+}
 
 export function Navegacion({ correo, nombre }: { correo: string; nombre: string }) {
   const barra = useRef<HTMLDivElement>(null)
@@ -68,8 +84,18 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
     return () => obs.disconnect()
   }, [])
 
-  // Sin hover, la gota vuelve a la sección activa.
+  /**
+   * La gota NO vuelve sola a la sección activa: se queda donde la dejó el
+   * cursor y espera a que vuelvas. Es un indicador de dónde está tu mano, no
+   * de dónde está la página — para eso está el punto de aria-current, que sí
+   * sigue al scroll. Dos informaciones distintas, dos señales distintas.
+   *
+   * Solo se coloca una vez, al arrancar, sobre la sección en la que entras.
+   */
+  const colocadaAlInicio = useRef(false)
   useEffect(() => {
+    if (colocadaAlInicio.current) return
+    colocadaAlInicio.current = true
     objetivo.current = activa
   }, [activa])
 
@@ -120,7 +146,9 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
         { transform: `translate(${dx}px, ${dy}px)`, opacity: 0.55 },
         { transform: "translate(0, 0)", opacity: 1 },
       ],
-      { duration: 640, easing: "cubic-bezier(0.32, 1.14, 0.36, 1)" },
+      // Sin rebote y más largo: el vuelo antes se sentía violento porque la
+      // curva sobrepasaba el destino. Aquí solo desacelera.
+      { duration: 820, easing: "cubic-bezier(0.22, 0.68, 0.24, 1)" },
     )
   }, [vertical])
 
@@ -131,10 +159,12 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
     let pos = 0
     let vel = 0
     let posR = 0 // el rastro
+    let velR = 0
     let arrancado = false
     let vivo = true
+    let anterior = 0
 
-    const colocar = () => {
+    const colocar = (dt = 1 / 60) => {
       const el = enlaces.current[objetivo.current]
       const g = gota.current
       const r = rastro.current
@@ -148,10 +178,8 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
       }
 
       if (suave) {
-        vel += (destino - pos) * MUELLE
-        vel *= ROCE
-        pos += vel
-        posR += (pos - posR) * MUELLE_RASTRO
+        ;({ pos, vel } = paso(pos, vel, destino, RESPUESTA, dt))
+        ;({ pos: posR, vel: velR } = paso(posR, velR, pos, RESPUESTA_RASTRO, dt))
       } else {
         pos = destino
         posR = destino
@@ -160,7 +188,7 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
 
       // Estirada en la dirección del viaje, adelgazada en la perpendicular:
       // el volumen se conserva y por eso parece una gota y no un rectángulo.
-      const tension = Math.min(Math.abs(vel) * ESTIRA, 0.5)
+      const tension = Math.min(Math.abs(vel) * ESTIRA, 0.34)
       const largo = (1 + tension) * pulso.current
       const ancho = (1 - tension * 0.55) * pulso.current
 
@@ -173,24 +201,28 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
         : `translateX(${pos}px) scale(${largo}, ${ancho})`
 
       if (r) {
-        const desfase = Math.min(Math.abs(pos - posR) / 60, 1)
+        const desfase = Math.min(Math.abs(pos - posR) / 55, 1)
         r.style.width = `${w}px`
         r.style.height = `${h}px`
-        r.style.opacity = `${desfase * 0.5}`
+        r.style.opacity = `${desfase * 0.42}`
         r.style.transform = vertical
           ? `translateY(${posR}px) scale(${ancho}, ${largo})`
           : `translateX(${posR}px) scale(${largo}, ${ancho})`
       }
 
       // El pulso del clic vuelve solo a su sitio.
-      pulso.current += (1 - pulso.current) * 0.18
+      pulso.current += (1 - pulso.current) * Math.min(dt * 11, 1)
     }
 
     colocar() // sin esperar al primer fotograma, por si la pestaña está oculta
 
-    const marco = () => {
+    const marco = (ahora: number) => {
       if (!vivo) return
-      colocar()
+      // dt real y acotado: si la pestaña estuvo en segundo plano, un salto
+      // grande dispararía el muelle y la gota saldría volando.
+      const dt = anterior ? Math.min((ahora - anterior) / 1000, 1 / 30) : 1 / 60
+      anterior = ahora
+      colocar(dt)
       requestAnimationFrame(marco)
     }
     const id = requestAnimationFrame(marco)
@@ -204,9 +236,6 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
   const perseguir = useCallback((i: number) => {
     objetivo.current = i
   }, [])
-  const soltar = useCallback(() => {
-    objetivo.current = activa
-  }, [activa])
 
   // Al pulsar: la gota se encoge de golpe y el muelle la devuelve, hinchada.
   const ir = useCallback((e: React.MouseEvent<HTMLAnchorElement>, id: string, i: number) => {
@@ -225,7 +254,7 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
           <i>.</i>
         </span>
 
-        <nav onPointerLeave={soltar}>
+        <nav>
           <span className="gota rastro" ref={rastro} aria-hidden="true" />
           <span className="gota" ref={gota} aria-hidden="true" />
           {SECCIONES.map((s, i) => (
@@ -238,7 +267,6 @@ export function Navegacion({ correo, nombre }: { correo: string; nombre: string 
               aria-current={activa === i ? "true" : undefined}
               onPointerEnter={() => perseguir(i)}
               onFocus={() => perseguir(i)}
-              onBlur={soltar}
               onClick={(e) => ir(e, s.id, i)}
             >
               {s.texto}
