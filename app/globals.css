@@ -1,0 +1,1153 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Paletas.
+   Cambia la activa en lib/theme.ts (o pruébalas en vivo con el selector de
+   desarrollo). Cada bloque define el mismo juego de tokens, así que el sitio
+   entero cambia de mundo sin tocar un solo componente.
+   --------------------------------------------------------------------------- */
+
+:root,
+[data-palette="acero"] {
+  --deep: #0a1017;
+  --steel: #131e28;
+  --steel-2: #18242f;
+  --mist: #dce6ee;
+  --dim: #8497a6;
+  --faint: #5c6e7c;
+  --accent: #8fb8d8;
+  --accent-lit: #b4d3ec;
+  --on-accent: #0a1017;
+  --hair: rgba(180, 205, 225, 0.13);
+  --hair-2: rgba(180, 205, 225, 0.22);
+  --glass: rgba(146, 181, 209, 0.1);
+  --glass-edge: rgba(226, 240, 252, 0.3);
+  --glow-1: rgba(143, 184, 216, 0.26);
+  --glow-2: rgba(80, 128, 168, 0.2);
+  --sky-top: #16232f;
+  --sky-mid: #0c141c;
+}
+
+[data-palette="petroleo"] {
+  --deep: #04211e;
+  --steel: #0a332e;
+  --steel-2: #0d3b35;
+  --mist: #dcece7;
+  --dim: #7fa298;
+  --faint: #547268;
+  --accent: #4fc7a3;
+  --accent-lit: #86e2c4;
+  --on-accent: #04211e;
+  --hair: rgba(160, 220, 200, 0.13);
+  --hair-2: rgba(160, 220, 200, 0.22);
+  --glass: rgba(120, 200, 175, 0.1);
+  --glass-edge: rgba(220, 250, 240, 0.3);
+  --glow-1: rgba(31, 163, 126, 0.28);
+  --glow-2: rgba(14, 124, 99, 0.22);
+  --sky-top: #0b3a34;
+  --sky-mid: #06271f;
+}
+
+[data-palette="vino"] {
+  --deep: #1a060c;
+  --steel: #2e0e17;
+  --steel-2: #37121c;
+  --mist: #f0dee1;
+  --dim: #ab8189;
+  --faint: #7c5760;
+  --accent: #d9645a;
+  --accent-lit: #f0938a;
+  --on-accent: #1a060c;
+  --hair: rgba(230, 180, 185, 0.13);
+  --hair-2: rgba(230, 180, 185, 0.22);
+  --glass: rgba(215, 140, 145, 0.1);
+  --glass-edge: rgba(255, 230, 232, 0.3);
+  --glow-1: rgba(194, 72, 63, 0.26);
+  --glow-2: rgba(126, 29, 46, 0.24);
+  --sky-top: #3a1019;
+  --sky-mid: #21080e;
+}
+
+[data-palette="indigo"] {
+  --deep: #080d1c;
+  --steel: #131c38;
+  --steel-2: #182242;
+  --mist: #dfe3f2;
+  --dim: #8d94b8;
+  --faint: #626a90;
+  --accent: #dda355;
+  --accent-lit: #f3c684;
+  --on-accent: #080d1c;
+  --hair: rgba(190, 200, 240, 0.13);
+  --hair-2: rgba(190, 200, 240, 0.22);
+  --glass: rgba(150, 165, 220, 0.1);
+  --glass-edge: rgba(230, 236, 255, 0.3);
+  --glow-1: rgba(40, 53, 111, 0.42);
+  --glow-2: rgba(201, 138, 52, 0.22);
+  --sky-top: #16205c;
+  --sky-mid: #0b1128;
+}
+
+[data-palette="bosque"] {
+  --deep: #071410;
+  --steel: #0e2419;
+  --steel-2: #122c1f;
+  --mist: #e4ece1;
+  --dim: #8ba18e;
+  --faint: #5f7565;
+  --accent: #c69b52;
+  --accent-lit: #e3bf7f;
+  --on-accent: #071410;
+  --hair: rgba(200, 220, 195, 0.13);
+  --hair-2: rgba(200, 220, 195, 0.22);
+  --glass: rgba(160, 195, 160, 0.1);
+  --glass-edge: rgba(235, 245, 230, 0.3);
+  --glow-1: rgba(29, 74, 46, 0.4);
+  --glow-2: rgba(185, 139, 69, 0.2);
+  --sky-top: #12301f;
+  --sky-mid: #081a12;
+}
+
+[data-palette="cobre"] {
+  --deep: #140a05;
+  --steel: #26150c;
+  --steel-2: #2d1a10;
+  --mist: #f0e3d8;
+  --dim: #ab9382;
+  --faint: #7c675a;
+  --accent: #d97a2b;
+  --accent-lit: #f0a35c;
+  --on-accent: #140a05;
+  --hair: rgba(235, 200, 170, 0.13);
+  --hair-2: rgba(235, 200, 170, 0.22);
+  --glass: rgba(215, 165, 125, 0.1);
+  --glass-edge: rgba(255, 238, 225, 0.3);
+  --glow-1: rgba(217, 122, 43, 0.24);
+  --glow-2: rgba(140, 74, 22, 0.28);
+  --sky-top: #33190c;
+  --sky-mid: #1c0e06;
+}
+
+@theme inline {
+  --font-serif: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-data);
+  --color-deep: var(--deep);
+  --color-mist: var(--mist);
+  --color-dim: var(--dim);
+  --color-accent: var(--accent);
+}
+
+/* --------------------------------------------------------------------------- */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+  body {
+    background: var(--deep);
+    color: var(--mist);
+    font-family: var(--font-body), system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    margin: 0;
+    font-weight: 400;
+    text-wrap: balance;
+  }
+  ::selection {
+    background: var(--accent-lit);
+    color: var(--on-accent);
+  }
+  :focus-visible {
+    outline: 2px solid var(--accent-lit);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+}
+
+/* Estructura ------------------------------------------------------------- */
+
+.page {
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+.lab {
+  font-family: var(--font-data), monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* Atmósfera: la luz de la página. El grano lo pinta components/site/grain.tsx */
+
+.atmos {
+  position: relative;
+  padding-bottom: 52px;
+  background:
+    radial-gradient(120% 90% at 18% 6%, var(--glow-1) 0%, transparent 58%),
+    radial-gradient(90% 70% at 88% 34%, var(--glow-2) 0%, transparent 62%),
+    linear-gradient(178deg, var(--sky-top) 0%, var(--sky-mid) 62%, var(--deep) 100%);
+}
+
+.grain {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.055;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* Vidrio: solo la barra, la tira de métricas y el dock de cierre ---------- */
+
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--hair-2);
+  backdrop-filter: blur(20px) saturate(170%) brightness(1.12);
+  -webkit-backdrop-filter: blur(20px) saturate(170%) brightness(1.12);
+  box-shadow:
+    inset 0 1px 0 var(--glass-edge),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+    0 20px 46px -24px rgba(0, 0, 0, 0.9);
+}
+
+/* El detalle del vidrio vive en el CANTO, no en el interior.
+   Lo alimenta components/site/glass-specular.tsx */
+
+.glass {
+  position: relative;
+}
+
+/* El canto: 1px de borde con fresnel permanente (más brillante en los
+   extremos, como el grosor real de una lámina) y un realce que viaja por él
+   siguiendo al puntero. La máscara recorta todo salvo ese 1px. */
+.glass::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background:
+    radial-gradient(
+      140px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(255, 255, 255, calc(0.62 * var(--spec, 0))),
+      rgba(140, 190, 255, calc(0.3 * var(--spec, 0))) 26%,
+      transparent 58%
+    ),
+    linear-gradient(
+      152deg,
+      rgba(255, 255, 255, 0.5) 0%,
+      rgba(255, 255, 255, 0.05) 26%,
+      rgba(255, 255, 255, 0) 54%,
+      rgba(190, 215, 255, 0.16) 78%,
+      rgba(255, 255, 255, 0.34) 100%
+    );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  transition: opacity 0.4s ease;
+}
+
+/* El interior: una veta diagonal tenue, no un foco. El vidrio no se enciende
+   por dentro — apenas devuelve una franja de lo que tiene encima. */
+.glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: var(--spec, 0);
+  transition: opacity 0.45s ease;
+  background: linear-gradient(
+    104deg,
+    transparent 0%,
+    transparent calc(var(--sx, 50%) - 16%),
+    color-mix(in srgb, var(--glass-edge) 20%, transparent) calc(var(--sx, 50%) - 4%),
+    color-mix(in srgb, var(--glass-edge) 34%, transparent) var(--sx, 50%),
+    color-mix(in srgb, var(--glass-edge) 12%, transparent) calc(var(--sx, 50%) + 6%),
+    transparent calc(var(--sx, 50%) + 20%),
+    transparent 100%
+  );
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass {
+    background: var(--steel-2);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .glass::after {
+    display: none;
+  }
+}
+
+/* Barra ------------------------------------------------------------------ */
+
+.navwrap {
+  position: sticky;
+  top: 16px;
+  z-index: 70;
+  display: flex;
+  justify-content: center;
+  padding-top: 24px;
+}
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 8px 9px 8px 19px;
+  border-radius: 999px;
+}
+.nav .mark {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  padding-right: 4px;
+}
+.nav .mark i {
+  font-style: normal;
+  color: var(--accent);
+}
+.nav nav {
+  display: flex;
+  gap: 20px;
+  font-size: 13.5px;
+}
+.nav nav a {
+  color: var(--dim);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav nav a:hover {
+  color: var(--mist);
+}
+.nav .cta {
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  color: var(--mist);
+  text-decoration: none;
+  background: rgba(226, 240, 252, 0.1);
+  border: 1px solid var(--hair-2);
+}
+
+/* Hero ------------------------------------------------------------------- */
+
+.hero {
+  position: relative;
+  z-index: 2;
+  padding: 118px 0 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: 56px;
+  align-items: center;
+}
+.hero h1 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(38px, 5.7vw, 64px);
+  line-height: 1.06;
+  letter-spacing: -0.022em;
+  max-width: 16ch;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--accent-lit);
+}
+.hero p {
+  max-width: 56ch;
+  color: var(--dim);
+  font-size: 17px;
+  margin: 24px 0 0;
+}
+.loc {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 22px;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* Tira de métricas ------------------------------------------------------- */
+
+.strip {
+  position: relative;
+  z-index: 2;
+  margin: 74px 0 -46px;
+  border-radius: 18px;
+  padding: 4px;
+}
+.strip .in {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+.m {
+  padding: 24px 26px;
+  border-right: 1px solid var(--hair);
+}
+.m:last-child {
+  border-right: none;
+}
+.m b {
+  display: block;
+  font-family: var(--font-data), monospace;
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--mist);
+}
+.m span {
+  display: block;
+  margin-top: 9px;
+  font-size: 12.5px;
+  color: color-mix(in srgb, var(--mist) 72%, transparent);
+  max-width: 24ch;
+  line-height: 1.5;
+}
+
+/* Secciones -------------------------------------------------------------- */
+
+.body {
+  padding-top: 112px;
+}
+.sechead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--hair);
+}
+.sechead h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 26px;
+  letter-spacing: -0.015em;
+}
+
+.feat {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: 46px;
+  align-items: center;
+  padding: 46px 0;
+  border-bottom: 1px solid var(--hair);
+}
+.feat h3 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 29px;
+  letter-spacing: -0.018em;
+  line-height: 1.2;
+  margin: 12px 0 0;
+}
+.feat p {
+  color: var(--dim);
+  font-size: 15.5px;
+  max-width: 46ch;
+  margin: 15px 0 0;
+}
+/* Ficha del proyecto: mi rol y el estado del código.
+   Se lee como documentación técnica, no como insignias. */
+
+.ficha {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 2px 18px;
+  margin: 22px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--hair);
+  font-family: var(--font-data), monospace;
+  font-size: 12px;
+  line-height: 1.65;
+}
+.ficha dt {
+  color: var(--faint);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  padding-top: 2px;
+}
+.ficha dd {
+  margin: 0;
+  color: var(--dim);
+}
+.ficha dd a {
+  color: var(--accent);
+  text-decoration: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 34%, transparent);
+}
+.ficha dd a:hover {
+  color: var(--accent-lit);
+}
+/* El estado lleva un punto: encendido si ya opera, apagado si espera arranque.
+   La diferencia se ve antes de leerla. */
+.ficha dd[data-estado]::before {
+  content: "";
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: 2px;
+  background: var(--faint);
+}
+.ficha dd[data-estado="produccion"] {
+  color: var(--mist);
+}
+.ficha dd[data-estado="produccion"]::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
+.panelnota {
+  margin: 14px 0 0;
+  font-family: var(--font-data), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+
+/* La burbuja del caso: <dialog> nativo. Es la capa flotante del sistema,
+   el único sitio donde el vidrio tiene permiso de existir. */
+
+.modal {
+  margin: auto;
+  width: min(720px, calc(100vw - 40px));
+  max-height: min(84vh, 860px);
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--mist);
+  overflow: visible;
+}
+.modal::backdrop {
+  background: color-mix(in srgb, var(--deep) 62%, transparent);
+  backdrop-filter: blur(6px) saturate(120%);
+  -webkit-backdrop-filter: blur(6px) saturate(120%);
+}
+.modalin {
+  border-radius: 22px;
+  max-height: inherit;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.modal header {
+  position: relative;
+  padding: 26px 62px 20px 30px;
+  border-bottom: 1px solid var(--hair);
+  flex: none;
+}
+.modal header h3 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 25px;
+  letter-spacing: -0.018em;
+  line-height: 1.22;
+  margin-top: 8px;
+}
+.cerrar {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid var(--hair-2);
+  background: color-mix(in srgb, var(--mist) 8%, transparent);
+  color: var(--mist);
+  font-size: 19px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    border-color 0.2s;
+}
+.cerrar:hover {
+  background: color-mix(in srgb, var(--mist) 16%, transparent);
+  border-color: var(--accent);
+}
+.modalcuerpo {
+  padding: 24px 22px 30px 30px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  /* La nativa de Windows es gris, ancha y se pega al canto redondeado */
+  scrollbar-width: thin;
+  scrollbar-color: var(--hair-2) transparent;
+}
+.modalcuerpo::-webkit-scrollbar {
+  width: 8px;
+}
+.modalcuerpo::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modalcuerpo::-webkit-scrollbar-thumb {
+  background: var(--hair-2);
+  border-radius: 99px;
+}
+.modalcuerpo::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--mist) 30%, transparent);
+}
+.modalcuerpo h4 {
+  margin: 28px 0 0;
+  font-family: var(--font-data), monospace;
+  font-size: 10.5px;
+  font-weight: 400;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.modalcuerpo h4:first-child {
+  margin-top: 0;
+}
+.modalcuerpo > p {
+  margin: 10px 0 0;
+  font-size: 15px;
+  color: var(--dim);
+  max-width: 62ch;
+}
+.modalcuerpo .ficha {
+  margin-top: 30px;
+}
+
+/* En móvil deja de ser burbuja y pasa a ser hoja: pegada abajo, a todo el ancho */
+@media (max-width: 640px) {
+  .modal {
+    width: 100vw;
+    max-width: none;
+    max-height: 88vh;
+    margin: auto 0 0;
+  }
+  .modalin {
+    border-radius: 20px 20px 0 0;
+  }
+  .modal header {
+    padding: 22px 56px 16px 20px;
+  }
+  .modalcuerpo {
+    padding: 20px 20px 28px;
+  }
+}
+
+/* Sin fondos opacos: dentro de la burbuja taparían el vidrio.
+   La separación la hacen las líneas de pelo, no los bloques. */
+.partes {
+  margin: 14px 0 0;
+  border-bottom: 1px solid var(--hair);
+}
+.partes > div {
+  padding: 14px 0;
+  border-top: 1px solid var(--hair);
+  display: grid;
+  grid-template-columns: 172px minmax(0, 1fr);
+  gap: 18px;
+}
+.partes dt {
+  font-size: 13.5px;
+  color: var(--mist);
+}
+.partes dd {
+  margin: 0;
+  font-size: 14px;
+  color: var(--dim);
+}
+@media (max-width: 640px) {
+  .partes > div {
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+.tag {
+  font-family: var(--font-data), monospace;
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--dim);
+  border: 1px solid var(--hair);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+/* Es un <button> que abre la burbuja, no un enlace: no navega a ningún sitio. */
+.read {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  margin-top: 22px;
+  padding: 0 0 2px;
+  font: inherit;
+  font-size: 14px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.read::after {
+  content: "";
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid currentColor;
+  border-right: 1px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 0.2s;
+}
+.read:hover {
+  color: var(--accent-lit);
+}
+.read:hover::after {
+  transform: rotate(45deg) translate(2px, -2px);
+}
+
+/* Panel: la captura del sistema. Opaco a propósito — el vidrio no toca contenido */
+
+.panel {
+  background: linear-gradient(168deg, var(--steel-2), var(--steel));
+  border: 1px solid var(--hair);
+  border-radius: 15px;
+  padding: 18px 20px 20px;
+  box-shadow: 0 24px 50px -30px rgba(0, 0, 0, 0.9);
+}
+.panel .bar {
+  display: flex;
+  gap: 6px;
+  padding-bottom: 14px;
+}
+.panel .bar i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hair-2);
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-family: var(--font-data), monospace;
+  font-size: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--hair);
+  color: var(--dim);
+}
+.row b {
+  font-weight: 400;
+  color: var(--mist);
+}
+.row .up {
+  color: var(--accent-lit);
+}
+.track {
+  height: 5px;
+  border-radius: 3px;
+  background: var(--hair-2);
+  overflow: hidden;
+  margin-top: 16px;
+}
+.track i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-lit));
+}
+
+/* Archivo ---------------------------------------------------------------- */
+
+.idx {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 6px;
+}
+.idx td {
+  padding: 18px 0;
+  border-bottom: 1px solid var(--hair);
+  vertical-align: baseline;
+}
+.idx tr {
+  transition: background 0.2s;
+}
+.idx tr:hover {
+  background: color-mix(in srgb, var(--mist) 4%, transparent);
+}
+.idx .yr {
+  font-family: var(--font-data), monospace;
+  font-size: 11.5px;
+  color: var(--faint);
+  width: 70px;
+  white-space: nowrap;
+}
+.idx .nm {
+  font-size: 16px;
+}
+.idx .ds {
+  color: var(--dim);
+  font-size: 14.5px;
+  padding-left: 24px;
+}
+.idx .st {
+  font-family: var(--font-data), monospace;
+  font-size: 11px;
+  color: var(--faint);
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* Retrato: en el hero, a tamaño humano. Sin halo, sin círculo, sin centrar —
+   eso es lo que convierte una cara en cliché. Aquí es una persona, no un avatar. */
+
+.retratowrap {
+  margin: 0;
+  max-width: 360px;
+  justify-self: end;
+  width: 100%;
+}
+.retratowrap figcaption {
+  margin-top: 14px;
+  text-align: right;
+}
+
+/* Sobre mí: la trayectoria en dos vías ---------------------------------- */
+
+.about {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: 52px;
+  align-items: start;
+  padding: 78px 0;
+  border-bottom: 1px solid var(--hair);
+}
+.trayectoria .resumen {
+  margin: 0 0 26px;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 21px;
+  line-height: 1.32;
+  letter-spacing: -0.012em;
+  color: var(--mist);
+  max-width: none;
+}
+.via + .via {
+  margin-top: 26px;
+}
+.via h3 {
+  font-family: var(--font-data), monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.via ol {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  border-left: 1px solid var(--hair-2);
+}
+.via li {
+  position: relative;
+  padding: 0 0 14px 20px;
+}
+.via li:last-child {
+  padding-bottom: 6px;
+}
+/* El punto se enciende solo en el escalón actual: el de arriba de cada vía */
+.via li::before {
+  content: "";
+  position: absolute;
+  left: -3.5px;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--faint);
+}
+.via li:last-child::before {
+  background: var(--accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 18%, transparent);
+}
+.via .fecha {
+  display: block;
+  font-family: var(--font-data), monospace;
+  font-size: 11px;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+}
+.via .cargo {
+  display: block;
+  font-size: 14.5px;
+  color: var(--mist);
+  margin-top: 2px;
+}
+.via .pie {
+  margin: 8px 0 0 20px;
+  font-size: 12.5px;
+  color: var(--dim);
+}
+
+.retrato {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid var(--hair-2);
+  background: linear-gradient(168deg, var(--steel-2), var(--steel));
+}
+.retrato img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* gradación fría, para que la foto no pelee con la paleta */
+  filter: saturate(0.72) contrast(1.06) brightness(0.94);
+}
+.retrato .falta {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+  font-family: var(--font-data), monospace;
+  font-size: 11px;
+  line-height: 1.8;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.about p {
+  color: var(--dim);
+  font-size: 16px;
+  max-width: 58ch;
+  margin: 16px 0 0;
+}
+.about h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 29px;
+  letter-spacing: -0.018em;
+  margin-top: 10px;
+}
+
+/* Certificaciones: una línea sobria, sin barras ni porcentajes inventados */
+
+.certs {
+  margin: 30px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--hair);
+  font-family: var(--font-data), monospace;
+  font-size: 12px;
+}
+.certs dt {
+  color: var(--faint);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 10.5px;
+  margin-bottom: 8px;
+}
+.certs dd {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  padding: 5px 0;
+  color: var(--mist);
+}
+.certs dd span {
+  color: var(--dim);
+}
+.certs dd i {
+  font-style: normal;
+  color: var(--faint);
+  margin-left: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cierre ----------------------------------------------------------------- */
+
+.close {
+  position: relative;
+  margin-top: 104px;
+  background:
+    radial-gradient(90% 140% at 50% 120%, var(--glow-1) 0%, transparent 60%),
+    linear-gradient(180deg, var(--deep) 0%, var(--sky-mid) 100%);
+}
+.closein {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 92px 0 96px;
+  text-align: center;
+}
+.closein h2 {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(26px, 3.6vw, 38px);
+  letter-spacing: -0.018em;
+  max-width: 20ch;
+}
+.respuesta {
+  margin: 14px 0 0;
+  font-size: 14.5px;
+  color: var(--dim);
+}
+.dock {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 30px;
+  padding: 11px 12px 11px 22px;
+  border-radius: 999px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.dock span {
+  font-size: 14px;
+  color: var(--dim);
+}
+.dock a {
+  font-size: 13.5px;
+  text-decoration: none;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: var(--accent-lit);
+  color: var(--on-accent);
+}
+/* WhatsApp existe porque en Perú es el canal real, pero el correo sigue
+   siendo la acción principal: un solo botón encendido por vista. */
+.dock a.secundario {
+  background: transparent;
+  color: var(--mist);
+  border: 1px solid var(--hair-2);
+  padding: 7px 16px;
+}
+.dock a.secundario:hover {
+  border-color: var(--accent);
+  color: var(--accent-lit);
+}
+
+.pie {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  padding: 30px 0 40px;
+  font-size: 13px;
+  color: var(--faint);
+}
+.pie a {
+  color: var(--dim);
+  text-decoration: none;
+  margin-left: 18px;
+}
+.pie a:hover {
+  color: var(--mist);
+}
+
+/* Selector de paleta (solo en desarrollo) -------------------------------- */
+
+.swatcher {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 999px;
+}
+.swatcher button {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1px solid var(--hair-2);
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.15s;
+}
+.swatcher button:hover {
+  transform: scale(1.15);
+}
+.swatcher button[aria-pressed="true"] {
+  box-shadow: 0 0 0 2px var(--mist);
+}
+
+/* Responsive ------------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .feat {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 40px;
+    padding-top: 96px;
+  }
+  .retratowrap {
+    justify-self: start;
+    max-width: 260px;
+  }
+  .retratowrap figcaption {
+    text-align: left;
+  }
+  .about {
+    grid-template-columns: 1fr;
+    gap: 34px;
+  }
+  .idx .ds {
+    display: none;
+  }
+  .m {
+    border-right: none;
+    border-bottom: 1px solid var(--hair);
+  }
+  .m:last-child {
+    border-bottom: none;
+  }
+  .nav {
+    gap: 14px;
+    padding-left: 15px;
+  }
+  .nav nav {
+    display: none;
+  }
+}
