@@ -926,15 +926,21 @@
   aspect-ratio: 4 / 5;
   border-radius: 14px;
   overflow: hidden;
-  border: 1px solid var(--hair-2);
-  background: linear-gradient(168deg, var(--steel-2), var(--steel));
+  border: 1px solid var(--hair);
+  /* Negro puro para que el recorte funda sin costura con el `screen` de arriba */
+  background: #000;
 }
 .retrato img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* gradación fría, para que la foto no pelee con la paleta */
-  filter: saturate(0.72) contrast(1.06) brightness(0.94);
+  object-position: center 12%;
+  /* La foto es un recorte sobre negro. `screen` hace que ese negro desaparezca
+     contra el fondo, así que la figura emerge de la atmósfera en lugar de venir
+     dentro de una caja. La gradación fría evita que los tonos cálidos de la
+     ropa peleen con el acero. */
+  mix-blend-mode: screen;
+  filter: saturate(0.58) contrast(1.04) brightness(0.96) hue-rotate(-6deg);
 }
 .retrato .falta {
   position: absolute;
