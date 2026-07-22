@@ -2,6 +2,13 @@
   "name": "my-v0-project",
   "version": "0.1.0",
   "private": true,
+  "//browserslist": "Sin esto Lightning CSS asumia navegadores antiguos y dejaba solo -webkit-backdrop-filter, que Chromium moderno ya no soporta: el vidrio del sitio entero se caia.",
+  "browserslist": [
+    "chrome >= 111",
+    "edge >= 111",
+    "firefox >= 121",
+    "safari >= 16.4"
+  ],
   "scripts": {
     "build": "next build",
     "dev": "next dev",
