@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Grain } from "@/components/site/grain"
+import { VidrioLiquido } from "@/components/site/vidrio-liquido"
 import { CasoModal } from "@/components/site/caso-modal"
 import { GlassSpecular } from "@/components/site/glass-specular"
 import { PaletteSwitcher } from "@/components/site/palette-switcher"
@@ -227,6 +228,7 @@ export default function Home() {
         </span>
       </footer>
 
+      <VidrioLiquido />
       <GlassSpecular />
       <PaletteSwitcher />
     </>

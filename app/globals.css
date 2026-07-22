@@ -273,26 +273,16 @@
   transition: opacity 0.4s ease;
 }
 
-/* El interior: una veta diagonal tenue, no un foco. El vidrio no se enciende
-   por dentro — apenas devuelve una franja de lo que tiene encima. */
-.glass::after {
-  content: "";
+/* NO hay reflejo en el interior. El vidrio no se enciende por dentro: la luz
+   solo vive en el canto (ver .glass::before). Una veta cruzando la superficie
+   se lee como plástico pulido, que es exactamente lo que hay que evitar. */
+
+.filtros {
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
+  width: 0;
+  height: 0;
+  overflow: hidden;
   pointer-events: none;
-  opacity: var(--spec, 0);
-  transition: opacity 0.45s ease;
-  background: linear-gradient(
-    104deg,
-    transparent 0%,
-    transparent calc(var(--sx, 50%) - 16%),
-    color-mix(in srgb, var(--glass-edge) 20%, transparent) calc(var(--sx, 50%) - 4%),
-    color-mix(in srgb, var(--glass-edge) 34%, transparent) var(--sx, 50%),
-    color-mix(in srgb, var(--glass-edge) 12%, transparent) calc(var(--sx, 50%) + 6%),
-    transparent calc(var(--sx, 50%) + 20%),
-    transparent 100%
-  );
 }
 
 @media (prefers-reduced-transparency: reduce) {
@@ -550,24 +540,25 @@
   color: var(--mist);
   overflow: visible;
 }
-/* Capa uno: la página de atrás queda destruida, no difuminada. Debe adivinarse
-   el color y nunca la forma — si se distingue una palabra, el modal no se lee. */
+/* El fondo se tiene que seguir viendo. Apenas un velo y un desenfoque corto:
+   lo justo para separar planos, nunca para tapar la página. */
 .modal::backdrop {
-  background: color-mix(in srgb, var(--deep) 74%, transparent);
-  backdrop-filter: blur(30px) saturate(135%) brightness(0.72);
+  background: color-mix(in srgb, var(--deep) 26%, transparent);
+  backdrop-filter: blur(4px) saturate(115%);
   animation: fondoEntra 0.32s ease forwards;
 }
 
-/* Capa dos: el cristal del propio panel, encima del anterior. Mucho más denso
-   que el vidrio de la barra porque aquí debajo hay texto que competiría. */
+/* El cristal del panel. Tinte bajo a propósito: la refracción del canto la pone
+   components/site/vidrio-liquido.tsx, que sustituye este backdrop-filter por uno
+   con desplazamiento real. Esto es el plan B para navegadores sin url(). */
 .modalin {
   border-radius: 22px;
   max-height: inherit;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: color-mix(in srgb, var(--steel) 82%, transparent);
-  backdrop-filter: blur(44px) saturate(150%) brightness(1.06);
+  background: color-mix(in srgb, var(--steel) 46%, transparent);
+  backdrop-filter: blur(16px) saturate(170%);
   /* `forwards` y no `both`: si la línea de tiempo se congelara antes de
      arrancar, `both` dejaría el panel con el desenfoque inicial puesto para
      siempre. Sin retardo de por medio, se ve exactamente igual. */
