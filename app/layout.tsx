@@ -27,6 +27,9 @@ const data = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
+  // Necesario para que las URLs de las imágenes sociales se resuelvan absolutas.
+  // Cambiar por el dominio real al desplegar.
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITIO ?? "http://localhost:3100"),
   title: `${perfil.nombre} — ${perfil.rol}`,
   description: titular.bajada,
   openGraph: {

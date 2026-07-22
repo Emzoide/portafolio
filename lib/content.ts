@@ -30,11 +30,31 @@ export const titular = {
     "Construyo integraciones, CRMs y agentes que reemplazan trabajo repetitivo. Dentro de una empresa automotriz con noventa asesores, y como freelance: el ecosistema completo con el que un taller arranca operaciones este agosto.",
 }
 
+/**
+ * `nota` es la del sitio; `corto` la de la tarjeta de compartir, donde no cabe
+ * la frase entera. Etiquetas escritas, no la nota recortada a lo bruto.
+ */
 export const metricas = [
-  { valor: "900 h", nota: "Devueltas al mes tras digitalizar la gestión documental" },
-  { valor: "40 h", nota: "De reportes manuales eliminadas al mes por agentes" },
-  { valor: "−40 %", nota: "Tiempo de respuesta a prospectos con el chatbot en el CRM" },
-  { valor: "+20 %", nota: "Entrada de leads tras rehacer los módulos comerciales" },
+  {
+    valor: "900 h",
+    nota: "Devueltas al mes tras digitalizar la gestión documental",
+    corto: "Horas devueltas al mes",
+  },
+  {
+    valor: "40 h",
+    nota: "De reportes manuales eliminadas al mes por agentes",
+    corto: "Reportes manuales eliminados",
+  },
+  {
+    valor: "−40 %",
+    nota: "Tiempo de respuesta a prospectos con el chatbot en el CRM",
+    corto: "Tiempo de respuesta",
+  },
+  {
+    valor: "+20 %",
+    nota: "Entrada de leads tras rehacer los módulos comerciales",
+    corto: "Entrada de leads",
+  },
 ]
 
 export type Fila = { etiqueta: string; valor: string; alto?: boolean }
@@ -285,7 +305,8 @@ export const trayectoria = {
 export const sobreMi = {
   titulo: "El trabajo de una persona debería ser pensar, no hacer",
   parrafos: [
-    "Me cuesta dar algo por terminado. Cuando miro un sistema que ya funciona, lo que encuentro son aristas: lo que todavía se le puede agregar para que el proceso sea mejor. Completo no llega a estar nunca, porque siempre aparece algo nuevo — y esa es justamente la parte que me gusta.",
+    "Lo primero que automaticé fueron los precios de un concesionario. Había que entrar a cada una de las quinientas versiones de vehículo, una por una, y copiar su precio desde un Excel a la pantalla que le tocaba. Lo que hice fue dejar que ese mismo Excel —el que ya llenaban— se cargara al administrador y se cruzara solo con el ID de cada auto. Suena simple, y lo es. Devolvió una cantidad de horas que todavía me sorprende.",
+    "Desde entonces me cuesta dar algo por terminado. Cuando miro un sistema que ya funciona, lo que encuentro son aristas: lo que todavía se le puede agregar para que el proceso sea mejor. Completo no llega a estar nunca, porque siempre aparece algo nuevo — y esa es justamente la parte que me gusta.",
     "De ahí sale mi forma de trabajar. Cuando alguien se pasa la mañana copiando datos de una pantalla a otra, no está usando lo único que una máquina no le puede dar, que es criterio. Mi trabajo es quitarle esa mañana de encima.",
     "En los encargos por mi cuenta eso se vuelve más claro todavía: quien me contrata tiene un negocio que atender, no un sistema que operar. Así que la pregunta que me hago, y me la hago muchas veces seguidas, es qué arista falta para que la operación siga sola y lo único que quede sobre su mesa sea lo que de verdad necesita su cabeza.",
     "Soy bachiller en Ingeniería de Sistemas por la Universidad Tecnológica del Perú. Casi todo lo demás lo aprendí construyendo cosas que alguien necesitaba el lunes.",
