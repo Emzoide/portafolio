@@ -1356,10 +1356,12 @@
 
 /* Selector de paleta (solo en desarrollo) -------------------------------- */
 
+/* Abajo a la IZQUIERDA: la esquina derecha es de la gota del móvil, y este
+   selector solo existe en desarrollo — justo cuando estás mirando. */
 .swatcher {
   position: fixed;
-  right: 18px;
-  bottom: 18px;
+  left: 18px;
+  bottom: max(18px, env(safe-area-inset-bottom));
   z-index: 90;
   display: flex;
   align-items: center;
@@ -1381,6 +1383,13 @@
 }
 .swatcher button[aria-pressed="true"] {
   box-shadow: 0 0 0 2px var(--mist);
+}
+/* En horizontal ocupa 194px, más de media pantalla de móvil, y se cruzaba con
+   el índice al desplegarse. En columna son 40px y no estorba a nadie. */
+@media (max-width: 700px) {
+  .swatcher {
+    flex-direction: column;
+  }
 }
 
 /* Responsive ------------------------------------------------------------- */

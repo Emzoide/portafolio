@@ -1,5 +1,5 @@
 {
-  "name": "my-v0-project",
+  "name": "portafolio-eduardo-vegas",
   "version": "0.1.0",
   "private": true,
   "//browserslist": "Sin esto Lightning CSS asumia navegadores antiguos y dejaba solo -webkit-backdrop-filter, que Chromium moderno ya no soporta: el vidrio del sitio entero se caia.",
@@ -9,9 +9,11 @@
     "firefox >= 121",
     "safari >= 16.4"
   ],
+  "//dev:limpio": "Turbopack a veces sigue sirviendo el CSS anterior tras editar globals.css y los cambios no aparecen por mucho que recargues. Esto borra .next y arranca de cero.",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "dev:limpio": "node -e \"require('fs').rmSync('.next',{recursive:true,force:true})\" && next dev",
     "lint": "eslint .",
     "start": "next start"
   },
