@@ -311,6 +311,88 @@
   gap: 24px;
   padding: 8px 9px 8px 19px;
   border-radius: 999px;
+  transition:
+    padding 0.5s cubic-bezier(0.34, 1.3, 0.5, 1),
+    gap 0.5s cubic-bezier(0.34, 1.3, 0.5, 1);
+}
+.nav nav {
+  position: relative;
+}
+.nav nav a {
+  position: relative;
+  z-index: 1;
+  padding: 5px 13px;
+  border-radius: 999px;
+}
+.nav nav a[aria-current] {
+  color: var(--mist);
+}
+
+/* La gota. Se mueve con muelle desde el JS, que también la estira en la
+   dirección del viaje — eso es lo que la hace parecer líquida y no un
+   rectángulo deslizándose. */
+.gota {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--mist) 13%, transparent);
+  box-shadow:
+    inset 0 1px 0 var(--glass-edge),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22);
+  will-change: transform;
+}
+
+/* Pasado el hero la barra se va al lateral: la misma guía, girada.
+   Deja de ser navegación de cabecera y pasa a ser índice de la página. */
+.navwrap[data-modo="vertical"] {
+  position: fixed;
+  top: 50%;
+  left: 24px;
+  transform: translateY(-50%);
+  padding-top: 0;
+  justify-content: flex-start;
+}
+.navwrap[data-modo="vertical"] .nav {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 22px;
+}
+.navwrap[data-modo="vertical"] .mark,
+.navwrap[data-modo="vertical"] .cta {
+  display: none;
+}
+.navwrap[data-modo="vertical"] .nav nav {
+  flex-direction: column;
+  gap: 2px;
+}
+.navwrap[data-modo="vertical"] .nav nav a {
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+@media (max-width: 980px) {
+  /* Sin sitio en el margen: se queda arriba y no estorba. */
+  .navwrap[data-modo="vertical"] {
+    position: sticky;
+    top: 16px;
+    left: auto;
+    transform: none;
+    justify-content: center;
+  }
+  .navwrap[data-modo="vertical"] .nav {
+    flex-direction: row;
+    align-items: center;
+    gap: 24px;
+    padding: 8px 9px 8px 19px;
+    border-radius: 999px;
+  }
+  .navwrap[data-modo="vertical"] .nav nav {
+    flex-direction: row;
+  }
 }
 .nav .mark {
   font-family: var(--font-display), Georgia, serif;

@@ -169,7 +169,9 @@ export function VidrioLiquido() {
         childList: true,
         subtree: true,
         attributes: true,
-        attributeFilter: ["open"],
+        // `data-modo`: la barra cambia de forma al pasar a raíl vertical y hay
+        // que regenerarle el mapa de refracción con las medidas nuevas.
+        attributeFilter: ["open", "data-modo"],
       })
     }
 

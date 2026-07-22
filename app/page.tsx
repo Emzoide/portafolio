@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Grain } from "@/components/site/grain"
+import { Navegacion } from "@/components/site/navegacion"
 import { VidrioLiquido } from "@/components/site/vidrio-liquido"
 import { CasoModal } from "@/components/site/caso-modal"
 import { GlassSpecular } from "@/components/site/glass-specular"
@@ -26,22 +27,7 @@ export default function Home() {
       <section className="atmos">
         <Grain />
 
-        <div className="navwrap">
-          <div className="nav glass">
-            <span className="mark">
-              {perfil.nombre}
-              <i>.</i>
-            </span>
-            <nav>
-              <a href="#trabajo">Trabajo</a>
-              <a href="#sobre-mi">Sobre mí</a>
-              <a href="#contacto">Contacto</a>
-            </nav>
-            <a className="cta" href={`mailto:${perfil.correo}`}>
-              Conversemos
-            </a>
-          </div>
-        </div>
+        <Navegacion nombre={perfil.nombre} correo={perfil.correo} />
 
         <div className="page">
           <header className="hero">
