@@ -20,7 +20,7 @@ export function GlassSpecular() {
     let activo: HTMLElement | null = null
 
     const mover = (e: PointerEvent) => {
-      const objetivo = (e.target as Element | null)?.closest<HTMLElement>(".glass")
+      const objetivo = (e.target as Element | null)?.closest<HTMLElement>(".glass") ?? null
 
       if (objetivo !== activo) {
         activo?.style.setProperty("--spec", "0")
