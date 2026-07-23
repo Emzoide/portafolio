@@ -93,7 +93,14 @@ export function CasoModal({ proyecto }: { proyecto: Proyecto }) {
                   {parte.imgs?.length ? (
                     <div className="parteshots">
                       {parte.imgs.map((im) => (
-                        <Captura key={im.src} src={im.src} cap={im.cap} narrow={im.narrow} />
+                        <Captura
+                          key={im.src}
+                          src={im.src}
+                          cap={im.cap}
+                          narrow={im.narrow}
+                          width={im.width}
+                          height={im.height}
+                        />
                       ))}
                     </div>
                   ) : null}

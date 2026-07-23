@@ -94,11 +94,12 @@ export type Proyecto = {
     decision: { titulo: string; texto: string }
     /** Cada parte puede llevar la captura que la prueba, justo debajo del texto.
      *  `narrow` para pantallas verticales (vista del cliente), que no deben
-     *  estirarse a todo el ancho. */
+     *  estirarse a todo el ancho. `width` y `height` fijan la proporción real
+     *  cuando la captura no coincide con el formato horizontal principal. */
     partes: {
       nombre: string
       texto: string
-      imgs?: { src: string; cap: string; narrow?: boolean }[]
+      imgs?: { src: string; cap: string; narrow?: boolean; width?: number; height?: number }[]
     }[]
   }
 }
@@ -138,8 +139,18 @@ export const proyectos: Proyecto[] = [
           texto:
             "Clientes, vehículos y órdenes de trabajo con su historial. Quién trajo la unidad, qué se le hizo, qué repuesto se usó y en qué quedó. En la recepción, el estado del vehículo se registra sobre siluetas, daño por daño.",
           imgs: [
-            { src: "/capturas/red-siluetas.png", cap: "Recepción: daños e inventario del vehículo" },
-            { src: "/capturas/red-banda.png", cap: "Banda de obra — el taller en tiempo real" },
+            {
+              src: "/capturas/red-siluetas.png",
+              cap: "Recepción: daños e inventario del vehículo",
+              width: 1918,
+              height: 976,
+            },
+            {
+              src: "/capturas/red-banda.png",
+              cap: "Banda de obra — el taller en tiempo real",
+              width: 1918,
+              height: 975,
+            },
           ],
         },
         {
@@ -152,30 +163,70 @@ export const proyectos: Proyecto[] = [
           texto:
             "Los chats llegan por WhatsApp Cloud API a una bandeja donde un mensaje se convierte en prospecto y un prospecto en cliente, sin salir del sistema.",
           imgs: [
-            { src: "/capturas/red-bandeja.png", cap: "Bandeja de WhatsApp: bot, ventana de 24h y toma humana" },
-            { src: "/capturas/red-embudo.png", cap: "El embudo, por canal de entrada" },
+            {
+              src: "/capturas/red-bandeja.png",
+              cap: "Bandeja de WhatsApp: bot, ventana de 24h y toma humana",
+              width: 1918,
+              height: 981,
+            },
+            {
+              src: "/capturas/red-embudo.png",
+              cap: "El embudo, por canal de entrada",
+              width: 1915,
+              height: 973,
+            },
           ],
         },
         {
           nombre: "Alertas que salen solas",
           texto:
             "Al administrador le avisan cuando un repuesto baja del mínimo. Al cliente le avisan cuando su vehículo está listo para recoger, y le llegan sus documentos por correo.",
+          imgs: [
+            {
+              src: "/capturas/red-vehiculo-listo.png",
+              cap: "Correo automático cuando la unidad queda lista para entrega",
+              width: 1068,
+              height: 741,
+            },
+          ],
         },
         {
           nombre: "Fidelización",
           texto:
-            "Tarjetas y seguimiento para que el taller sepa a quién le toca volver, en vez de esperar a que aparezca.",
+            "Tarjetas, encuestas y seguimiento para que el taller sepa a quién le toca volver, en vez de esperar a que aparezca.",
+          imgs: [
+            {
+              src: "/capturas/red-fidelizacion.png",
+              cap: "Tarjeta de cliente: visitas, premio y QR de canje",
+              narrow: true,
+              width: 673,
+              height: 870,
+            },
+            {
+              src: "/capturas/red-encuesta.png",
+              cap: "Encuesta postservicio enviada por correo",
+              width: 1076,
+              height: 567,
+            },
+          ],
         },
         {
           nombre: "La web pública",
           texto:
             "También les hice el sitio, conectado al mismo sistema: el cliente agenda su cita desde ahí, la cita entra directo a la operación del taller, y desde la misma web sigue el avance de su vehículo en vivo.",
           imgs: [
-            { src: "/capturas/red-web.png", cap: "La web pública, conectada al CRM" },
+            {
+              src: "/capturas/red-web.png",
+              cap: "La web pública, conectada al CRM",
+              width: 1855,
+              height: 958,
+            },
             {
               src: "/capturas/red-seguimiento.png",
               cap: "El cliente sigue su vehículo en tiempo real",
               narrow: true,
+              width: 722,
+              height: 880,
             },
           ],
         },
