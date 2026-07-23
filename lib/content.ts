@@ -185,8 +185,8 @@ export const proyectos: Proyecto[] = [
             {
               src: "/capturas/red-vehiculo-listo.png",
               cap: "Correo automático cuando la unidad queda lista para entrega",
-              width: 1068,
-              height: 741,
+              width: 632,
+              height: 592,
             },
           ],
         },
@@ -205,8 +205,8 @@ export const proyectos: Proyecto[] = [
             {
               src: "/capturas/red-encuesta.png",
               cap: "Encuesta postservicio enviada por correo",
-              width: 1076,
-              height: 567,
+              width: 637,
+              height: 462,
             },
           ],
         },
