@@ -32,10 +32,6 @@ export default function Home() {
         <div className="page">
           <header className="hero">
             <div>
-              <p className="lab loc">
-                <span className="dot" aria-hidden="true" />
-                {perfil.lugar} — {perfil.rol}
-              </p>
               <h1>
                 {titular.antes}
                 <em>{titular.destacado}</em>
