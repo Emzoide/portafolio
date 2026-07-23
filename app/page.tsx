@@ -3,6 +3,7 @@ import { Grain } from "@/components/site/grain"
 import { Navegacion } from "@/components/site/navegacion"
 import { VidrioLiquido } from "@/components/site/vidrio-liquido"
 import { CasoModal } from "@/components/site/caso-modal"
+import { Captura } from "@/components/site/captura"
 import { GlassSpecular } from "@/components/site/glass-specular"
 import { PaletteSwitcher } from "@/components/site/palette-switcher"
 import {
@@ -115,23 +116,27 @@ export default function Home() {
                 <CasoModal proyecto={p} />
               </div>
 
-              <div className="panel">
-                <div className="bar" aria-hidden="true">
-                  <i />
-                  <i />
-                  <i />
-                </div>
-                {p.filas.map((f) => (
-                  <div className="row" key={f.etiqueta}>
-                    <span>{f.etiqueta}</span>
-                    <b className={f.alto ? "up" : undefined}>{f.valor}</b>
+              {p.captura ? (
+                <Captura src={p.captura} cap={p.panelNota} priority />
+              ) : (
+                <div className="panel">
+                  <div className="bar" aria-hidden="true">
+                    <i />
+                    <i />
+                    <i />
                   </div>
-                ))}
-                <div className="track" aria-hidden="true">
-                  <i style={{ width: `${p.progreso}%` }} />
+                  {p.filas.map((f) => (
+                    <div className="row" key={f.etiqueta}>
+                      <span>{f.etiqueta}</span>
+                      <b className={f.alto ? "up" : undefined}>{f.valor}</b>
+                    </div>
+                  ))}
+                  <div className="track" aria-hidden="true">
+                    <i style={{ width: `${p.progreso}%` }} />
+                  </div>
+                  {p.panelNota ? <p className="panelnota">{p.panelNota}</p> : null}
                 </div>
-                {p.panelNota ? <p className="panelnota">{p.panelNota}</p> : null}
-              </div>
+              )}
             </article>
           ))}
 

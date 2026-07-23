@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import type { Proyecto } from "@/lib/content"
+import { Captura } from "@/components/site/captura"
 
 /**
  * El caso, en una burbuja de vidrio flotando sobre la página.
@@ -82,14 +83,23 @@ export function CasoModal({ proyecto }: { proyecto: Proyecto }) {
             <p>{caso.decision.texto}</p>
 
             <h4>Qué resuelve</h4>
-            <dl className="partes">
+            <div className="partes">
               {caso.partes.map((parte) => (
-                <div key={parte.nombre}>
-                  <dt>{parte.nombre}</dt>
-                  <dd>{parte.texto}</dd>
+                <div className="parte" key={parte.nombre}>
+                  <div className="partetxt">
+                    <dt>{parte.nombre}</dt>
+                    <dd>{parte.texto}</dd>
+                  </div>
+                  {parte.imgs?.length ? (
+                    <div className="parteshots">
+                      {parte.imgs.map((im) => (
+                        <Captura key={im.src} src={im.src} cap={im.cap} narrow={im.narrow} />
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               ))}
-            </dl>
+            </div>
 
             <dl className="ficha">
               <dt>Estado</dt>

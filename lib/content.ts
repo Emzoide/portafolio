@@ -92,7 +92,14 @@ export type Proyecto = {
   caso?: {
     antes: string
     decision: { titulo: string; texto: string }
-    partes: { nombre: string; texto: string }[]
+    /** Cada parte puede llevar la captura que la prueba, justo debajo del texto.
+     *  `narrow` para pantallas verticales (vista del cliente), que no deben
+     *  estirarse a todo el ancho. */
+    partes: {
+      nombre: string
+      texto: string
+      imgs?: { src: string; cap: string; narrow?: boolean }[]
+    }[]
   }
 }
 
@@ -115,6 +122,8 @@ export const proyectos: Proyecto[] = [
     ],
     progreso: 88,
     panelNota: "Datos de demostración",
+    // Portada del proyecto: reemplaza el panel maquetado por la captura real.
+    captura: "/capturas/red-siluetas.png",
     caso: {
       antes:
         "Cuadernos, Excel y Google Sheets, WhatsApp Business por un lado, las hojas de SUNAT por otro, planillas hechas a mano con calculadora, un almacén entero dedicado a guardar papel — y gritos de un extremo del taller al otro para saber si una unidad ya estaba lista.",
@@ -127,7 +136,11 @@ export const proyectos: Proyecto[] = [
         {
           nombre: "Operación del taller",
           texto:
-            "Clientes, vehículos y órdenes de trabajo con su historial. Quién trajo la unidad, qué se le hizo, qué repuesto se usó y en qué quedó.",
+            "Clientes, vehículos y órdenes de trabajo con su historial. Quién trajo la unidad, qué se le hizo, qué repuesto se usó y en qué quedó. En la recepción, el estado del vehículo se registra sobre siluetas, daño por daño.",
+          imgs: [
+            { src: "/capturas/red-siluetas.png", cap: "Recepción: daños e inventario del vehículo" },
+            { src: "/capturas/red-banda.png", cap: "Banda de obra — el taller en tiempo real" },
+          ],
         },
         {
           nombre: "Facturación electrónica",
@@ -138,6 +151,10 @@ export const proyectos: Proyecto[] = [
           nombre: "WhatsApp como bandeja",
           texto:
             "Los chats llegan por WhatsApp Cloud API a una bandeja donde un mensaje se convierte en prospecto y un prospecto en cliente, sin salir del sistema.",
+          imgs: [
+            { src: "/capturas/red-bandeja.png", cap: "Bandeja de WhatsApp: bot, ventana de 24h y toma humana" },
+            { src: "/capturas/red-embudo.png", cap: "El embudo, por canal de entrada" },
+          ],
         },
         {
           nombre: "Alertas que salen solas",
@@ -152,7 +169,15 @@ export const proyectos: Proyecto[] = [
         {
           nombre: "La web pública",
           texto:
-            "También les hice el sitio, conectado al mismo sistema: el cliente agenda su cita desde ahí y la cita entra directo a la operación del taller.",
+            "También les hice el sitio, conectado al mismo sistema: el cliente agenda su cita desde ahí, la cita entra directo a la operación del taller, y desde la misma web sigue el avance de su vehículo en vivo.",
+          imgs: [
+            { src: "/capturas/red-web.png", cap: "La web pública, conectada al CRM" },
+            {
+              src: "/capturas/red-seguimiento.png",
+              cap: "El cliente sigue su vehículo en tiempo real",
+              narrow: true,
+            },
+          ],
         },
       ],
     },

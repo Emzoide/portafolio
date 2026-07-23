@@ -912,27 +912,84 @@
   margin: 14px 0 0;
   border-bottom: 1px solid var(--hair);
 }
-.partes > div {
-  padding: 14px 0;
+.parte {
+  padding: 16px 0;
   border-top: 1px solid var(--hair);
+}
+.partetxt {
   display: grid;
   grid-template-columns: 172px minmax(0, 1fr);
   gap: 18px;
 }
-.partes dt {
+.parte dt {
   font-size: 13.5px;
   color: var(--mist);
 }
-.partes dd {
+.parte dd {
   margin: 0;
   font-size: 14px;
   color: var(--dim);
 }
+/* Las capturas de la parte, alineadas bajo el texto (misma sangría). */
+.parteshots {
+  margin-top: 14px;
+  padding-left: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
 @media (max-width: 640px) {
-  .partes > div {
+  .partetxt {
     grid-template-columns: 1fr;
     gap: 5px;
   }
+  .parteshots {
+    padding-left: 0;
+  }
+}
+
+/* La captura enmarcada: barra de tres puntos + imagen + pie.
+   El marco la encuadra como pantalla ajena para que su rojo no pelee. */
+.shot {
+  margin: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--hair-2);
+  background: var(--steel);
+  box-shadow: 0 20px 44px -28px rgba(0, 0, 0, 0.9);
+}
+.shotbar {
+  display: flex;
+  gap: 6px;
+  padding: 11px 13px;
+  border-bottom: 1px solid var(--hair);
+}
+.shotbar i {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hair-2);
+}
+.shotimg {
+  position: relative;
+  line-height: 0;
+}
+.shotimg img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.shot figcaption {
+  padding: 10px 14px 12px;
+  font-family: var(--font-data), monospace;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  color: var(--faint);
+  border-top: 1px solid var(--hair);
+}
+/* Pantalla vertical (vista del cliente): no la estires a todo el ancho. */
+.shot.narrow {
+  max-width: 340px;
 }
 
 .tags {
