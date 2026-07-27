@@ -239,49 +239,95 @@ export const proyectos: Proyecto[] = [
     // del equipo, no de la empresa, y son datos de personal de miles de
     // trabajadores. La escala impresiona más que el nombre y no expone a nadie.
     contexto: "Freelance · Agroexportadora en Piura",
-    titulo: "Tres días de Excel convertidos en un tablero que carga en segundos",
-    estado: { clave: "produccion", texto: "En uso · versión web desde 2026" },
+    titulo: "El cruce manual de asistencia de ~4.700 personas, resuelto en segundos",
+    estado: { clave: "produccion", texto: "En uso · reemplazó el cruce manual mensual" },
     resumen:
-      "Con cerca de 9.700 trabajadores marcando cuatro veces al día, medir ausentismo y rotación en una hoja de cálculo dejó de ser viable. El área tardaba unos tres días en armar el reporte. Ahora suben el mismo Excel que ya descargaban y el tablero sale solo.",
-    rol: "Todo: análisis del formato del agrodata, motor de cálculo, plataforma web y despliegue.",
-    codigo: { estado: "cerrado", nota: "Sistema del cliente · código cerrado" },
-    tags: ["Python", "Pandas", "Plataforma web", "Excel"],
+      "El área de RR.HH. de una agroindustrial con cerca de 4.700 trabajadores controlaba el ausentismo cruzando a mano, cada mes, dos Excel de miles de filas. Le construí una herramienta de escritorio que se abre con doble clic —sin instalar nada, sin internet, sin costo de operación—: se arrastra el archivo de marcaciones y en segundos salen el ausentismo, la rotación y las alertas de personal en riesgo de cese.",
+    rol: "Todo: análisis del formato del agrodata, motor de cálculo, interfaz, gráficos y empaquetado.",
+    codigo: { estado: "cerrado", nota: "Herramienta del cliente · código cerrado" },
+    tags: ["Python", "http.server", "JS vanilla", "SVG a mano", "PyInstaller"],
     filas: [
-      { etiqueta: "Filas procesadas por carga", valor: "89 547" },
-      { etiqueta: "Tiempo de proceso", valor: "segundos", alto: true },
-      { etiqueta: "Ausentismo del periodo", valor: "23,8 %" },
-      { etiqueta: "Rotación del mes", valor: "1,2 %" },
+      { etiqueta: "Registros por carga", valor: "~90 000" },
+      { etiqueta: "Tiempo de cálculo", valor: "0,2 s", alto: true },
+      { etiqueta: "Antes, con Power Query", valor: "+7 min" },
+      { etiqueta: "Costo de operación", valor: "S/ 0" },
     ],
     progreso: 24,
     panelNota: "Datos de demostración",
+    captura: "/capturas/ausentismo/aus-resumen.png",
     caso: {
       antes:
-        "Alguien descargaba a diario la base desde el sistema externo y la peleaba en Excel, en Google Sheets o en Power BI. Con esa cantidad de marcaciones, cualquier cálculo masivo se arrastraba o se colgaba, y tener el reporte del periodo costaba alrededor de tres días de trabajo.",
+        "Cada mes, alguien descargaba la base de marcaciones y la cruzaba a mano en Excel. Con esa cantidad de filas cualquier cálculo masivo se arrastraba, no dejaba ver tendencias ni comparar periodos, y armar el reporte costaba horas propensas a error.",
       decision: {
-        titulo: "Por qué no bastaba con arreglar el Excel",
+        titulo: "Por qué un ejecutable y no una hoja de cálculo",
         texto:
-          "Primero se intentó por Power Query, que era el camino natural para un área que ya vivía en Excel. Con las 89.547 filas reales se colgaba más de siete minutos en las laptops del equipo, y el problema no era la fórmula: ese volumen no es trabajo de una hoja de cálculo. Moví el cálculo fuera de Excel y dejé Excel donde sí sirve — como el archivo que ellos ya sabían descargar y que ahora solo tienen que soltar en la plataforma.",
+          "El primer intento fue por Power Query, el camino natural para un área que vivía en Excel. Con el volumen real se colgaba más de siete minutos: ese trabajo no es de una hoja de cálculo. Lo llevé a un ejecutable portable que corre un servidor local y abre una interfaz en el navegador — sin instalar nada, sin internet y sin costo. Y como son datos de personal, esa decisión tiene un segundo motivo: la información nunca sale de la PC de la analista.",
       },
       partes: [
         {
-          nombre: "Quién está por cesar",
+          nombre: "Personal en riesgo de cese",
           texto:
-            "La alerta principal: quiénes se están acercando al límite de faltas injustificadas, con nombre y cuenta, antes de que el plazo se cumpla.",
+            "El ranking de quiénes se acercan al límite de faltas, según el criterio laboral que se configure —faltas seguidas, mensuales, el umbral que aplique—, antes de que el plazo se cumpla.",
+          imgs: [
+            {
+              src: "/capturas/ausentismo/aus-riesgo.png",
+              cap: "Personal en riesgo, ordenado por faltas",
+              width: 1915,
+              height: 975,
+            },
+          ],
         },
         {
-          nombre: "Ausentismo entre dos fechas",
+          nombre: "El calendario de cada trabajador",
           texto:
-            "El porcentaje del periodo que se elija, con atajos para la semana pasada o la semana en curso, sin tener que rearmar nada.",
+            "Una ficha por persona con su asistencia día a día: faltas, descansos, licencias y su racha, para sustentar cada decisión con el detalle a la vista.",
+          imgs: [
+            {
+              src: "/capturas/ausentismo/aus-ficha.png",
+              cap: "Ficha individual con calendario de asistencia",
+              width: 1030,
+              height: 981,
+            },
+          ],
         },
         {
-          nombre: "Rotación",
+          nombre: "Comparar periodos, con memoria",
           texto:
-            "Cuánta gente hay hoy frente a cuánta habrá mañana, que en un padrón altamente rotativo es el número que decide si se contrata o no.",
+            "Guarda el histórico de cada carga y compara solo: una semana contra la anterior, un mes contra otro o el rango que se elija. El ausentismo y la rotación dejan de ser una foto y pasan a ser una tendencia.",
+          imgs: [
+            {
+              src: "/capturas/ausentismo/aus-resumen.png",
+              cap: "Resumen del periodo: ausentismo, rotación y movimiento",
+              width: 1913,
+              height: 977,
+            },
+          ],
         },
         {
-          nombre: "La carga",
+          nombre: "Cómo se cuenta cada día",
           texto:
-            "Suben el mismo archivo que ya descargaban del sistema externo. No hubo que cambiarles el proceso de origen ni pedirle nada a otro proveedor.",
+            "Cada código del agrodata es configurable —si se espera trabajo ese día, si suma como falta o como ausencia justificada— y el criterio de cese se ajusta sin tocar el código. La regla del negocio vive en la configuración, no en el programa.",
+          imgs: [
+            {
+              src: "/capturas/ausentismo/aus-config.png",
+              cap: "Significado y peso de cada código de asistencia",
+              width: 1915,
+              height: 967,
+            },
+          ],
+        },
+        {
+          nombre: "Cargar y exportar",
+          texto:
+            "Se arrastra el mismo archivo que RR.HH. ya descargaba, sin cambiarles el proceso de origen. La salida va a CSV listo para Excel o Power BI, con el detalle completo cuando hace falta.",
+          imgs: [
+            {
+              src: "/capturas/ausentismo/aus-carga.png",
+              cap: "Periodos cargados y formatos de exportación",
+              width: 1918,
+              height: 973,
+            },
+          ],
         },
       ],
     },
