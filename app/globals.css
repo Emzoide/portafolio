@@ -634,6 +634,18 @@
   padding: 46px 0;
   border-bottom: 1px solid var(--hair);
 }
+/* Zigzag: en las filas pares la imagen pasa a la izquierda y el texto a la
+   derecha. Con dos o tres casos da ritmo; el texto sigue liderando la lectura
+   en cada fila. */
+.feat:nth-of-type(even) {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+}
+.feat:nth-of-type(even) > :first-child {
+  order: 2;
+}
+.feat:nth-of-type(even) > :last-child {
+  order: 1;
+}
 .feat h3 {
   font-family: var(--font-display), Georgia, serif;
   font-size: 29px;
@@ -1454,9 +1466,17 @@
 /* Responsive ------------------------------------------------------------- */
 
 @media (max-width: 860px) {
-  .feat {
+  .feat,
+  .feat:nth-of-type(even) {
     grid-template-columns: 1fr;
     gap: 30px;
+  }
+  /* Apilado: el texto siempre primero, aunque en escritorio fuera a la derecha. */
+  .feat:nth-of-type(even) > :first-child {
+    order: 0;
+  }
+  .feat:nth-of-type(even) > :last-child {
+    order: 0;
   }
   .hero {
     grid-template-columns: 1fr;
