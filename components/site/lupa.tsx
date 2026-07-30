@@ -30,8 +30,16 @@ const ZOOM = 1.85
  * TAU es el tiempo que tarda en recorrer ~63 % de lo que le falta.
  */
 const TAU = 0.055 // seguimiento de la posición
-const TAU_VEL = 0.1 // suavizado de la velocidad, para que el estirón no parpadee
-const ESTIRA = 0.0016 // por px/s
+const TAU_VEL = 0.09 // suavizado de la velocidad, para que el estirón no parpadee
+
+/**
+ * El agua se deforma rápido y se recupera despacio: esa asimetría es la
+ * tensión superficial, y es lo que separa una gota de un óvalo elástico.
+ */
+const TAU_TENSA = 0.045 // se estira
+const TAU_RELAJA = 0.2 // vuelve a ser redonda
+const ESTIRA = 0.0019 // por px/s
+const TENSION_MAX = 0.3
 
 /** Interpolación independiente de los fps: mismo tacto a 60 o a 144 Hz. */
 function acercar(actual: number, destino: number, tau: number, dt: number) {
@@ -90,17 +98,31 @@ export function Lupa() {
     if (!window.matchMedia("(pointer: fine)").matches) return
     const suave = !window.matchMedia("(prefers-reduced-motion: reduce)").matches
 
-    // La burbuja: el canto va fuera y la imagen refractada dentro, para que el
-    // filtro deforme el contenido sin comerse el brillo del borde.
+    /**
+     * Tres capas, y la separación importa:
+     *
+     *   .lupa      posiciona (transform: translate + estirón) — la mueve el JS
+     *   .lupaglobo infla y desinfla (scale/opacity/filter)    — lo hace el CSS
+     *   .lupaimg   la imagen refractada
+     *
+     * No se pueden juntar: la especificación aplica las propiedades
+     * individuales (translate, rotate, scale) ANTES que `transform`, así que un
+     * `scale: 0.04` para el inflado multiplicaría por 0.04 el translate de la
+     * posición — la burbuja nacía pegada a la esquina superior izquierda y
+     * volaba hasta el cursor mientras crecía.
+     */
     const lente = document.createElement("div")
     lente.className = "lupa"
     lente.setAttribute("aria-hidden", "true")
     lente.style.width = `${DIAMETRO}px`
     lente.style.height = `${DIAMETRO}px`
 
+    const globo = document.createElement("div")
+    globo.className = "lupaglobo"
     const cristal = document.createElement("div")
     cristal.className = "lupaimg"
-    lente.appendChild(cristal)
+    globo.appendChild(cristal)
+    lente.appendChild(globo)
 
     // Filtro de refracción, uno solo para toda la página.
     const svgNS = "http://www.w3.org/2000/svg"
@@ -141,6 +163,8 @@ export function Lupa() {
     let posY = 0
     let velX = 0
     let velY = 0
+    let tension = 0
+    let angulo = 0
     let arrancada = false
     let anterior = 0
     let vivo = true
@@ -160,13 +184,10 @@ export function Lupa() {
     /**
      * Coloca la burbuja. Estirada en la dirección del viaje y adelgazada en la
      * perpendicular: el volumen se conserva y por eso se lee como gota y no
-     * como círculo que se desliza.
+     * como círculo que se desliza. El ángulo se recuerda mientras se relaja,
+     * porque si se pusiera a cero al frenar la gota giraría de golpe.
      */
     const situar = () => {
-      const rapidez = Math.hypot(velX, velY)
-      const tension = Math.min(rapidez * ESTIRA, 0.3)
-      const angulo = rapidez > 1 ? (Math.atan2(velY, velX) * 180) / Math.PI : 0
-
       lente.style.transform =
         `translate(${posX - DIAMETRO / 2}px, ${posY - DIAMETRO / 2}px)` +
         ` rotate(${angulo}deg) scale(${1 + tension}, ${1 - tension * 0.62}) rotate(${-angulo}deg)`
@@ -190,11 +211,20 @@ export function Lupa() {
         velY = acercar(velY, (ny - posY) / dt, TAU_VEL, dt)
         posX = nx
         posY = ny
+
+        const rapidez = Math.hypot(velX, velY)
+        const objetivo = Math.min(rapidez * ESTIRA, TENSION_MAX)
+        // Asimétrico: se estira rápido, se redondea despacio.
+        tension = acercar(tension, objetivo, objetivo > tension ? TAU_TENSA : TAU_RELAJA, dt)
+        // El ángulo solo se actualiza cuando hay viaje de verdad; si no, la
+        // gota giraría sobre sí misma al frenar.
+        if (rapidez > 24) angulo = (Math.atan2(velY, velX) * 180) / Math.PI
       } else {
         posX = destX
         posY = destY
         velX = 0
         velY = 0
+        tension = 0
       }
 
       situar()
@@ -214,10 +244,13 @@ export function Lupa() {
       destX = e.clientX
       destY = e.clientY
       if (!arrancada) {
+        // Nace exactamente donde está el cursor, redonda y quieta.
         posX = destX
         posY = destY
         velX = 0
         velY = 0
+        tension = 0
+        angulo = 0
         arrancada = true
       }
       cristal.style.backgroundImage = `url("${fuente}")`

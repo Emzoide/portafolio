@@ -1012,22 +1012,30 @@
 /* La lupa: una burbuja que amplía el trozo de captura bajo el cursor.
    Vive en <body> y la posiciona components/site/lupa.tsx.
    El canto es lo que la hace vidrio — nada de vetas por dentro. */
+/* Capa 1 — posiciona. Nada más: aquí solo manda el `transform` que escribe el
+   JS (translate + estirón). El inflado NO puede vivir aquí: la especificación
+   aplica `scale` antes que `transform`, así que multiplicaría el translate y la
+   burbuja nacería en la esquina en vez de bajo el cursor. */
 .lupa {
   position: fixed;
   top: 0;
   left: 0;
   z-index: 80;
-  border-radius: 50%;
-  overflow: hidden;
   pointer-events: none;
   transform-origin: center;
-  will-change: transform, scale;
-  /* Nace de la nada en el punto donde está el cursor y se infla; al salir se
-     desinfla hasta desaparecer. `scale` va aparte de `transform` porque el
-     seguimiento del JS manda en este último: entrada y persecución no se pisan.
+  will-change: transform;
+}
 
-     Este bloque es además el estado de SALIDA, así que su transición es la del
-     desinflado: se encoge acelerando, como una burbuja que se cierra. */
+/* Capa 2 — la burbuja. Nace de la nada donde está el cursor y se infla; al
+   salir se desinfla hasta desaparecer. Este bloque es el estado de SALIDA, así
+   que su transición es la del desinflado: se cierra acelerando. */
+.lupaglobo {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  overflow: hidden;
+  transform-origin: center;
+  will-change: scale, opacity;
   opacity: 0;
   scale: 0.04;
   filter: blur(6px);
@@ -1042,7 +1050,7 @@
     0 22px 46px -12px rgba(0, 0, 0, 0.8);
 }
 /* El inflado: crece con un punto de sobreimpulso, como una gota que se llena. */
-.lupa.viva {
+.lupa.viva .lupaglobo {
   opacity: 1;
   scale: 1;
   /* `none` y no blur(0): el minificador colapsa blur(0) y blur(0px) a blur(),
@@ -1055,7 +1063,7 @@
     scale 0.42s cubic-bezier(0.22, 1.35, 0.36, 1),
     filter 0.3s ease-out;
 }
-/* El contenido refractado. El filtro SVG lo deforma solo en el canto. */
+/* Capa 3 — el contenido refractado. El filtro SVG lo deforma solo en el canto. */
 .lupaimg {
   position: absolute;
   inset: 0;
@@ -1065,7 +1073,7 @@
 }
 /* El canto: fresnel más dispersión cromática — un cristal grueso separa el
    color como un prisma. Va tan tenue que se lee como grosor, no como color. */
-.lupa::after {
+.lupaglobo::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -1092,7 +1100,7 @@
   mask-composite: exclude;
 }
 @media (prefers-reduced-motion: reduce) {
-  .lupa {
+  .lupaglobo {
     scale: 1;
     filter: none;
     transition: opacity 0.15s ease;
