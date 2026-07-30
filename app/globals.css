@@ -1015,25 +1015,73 @@
   left: 0;
   z-index: 80;
   border-radius: 50%;
+  overflow: hidden;
   pointer-events: none;
-  background-repeat: no-repeat;
-  background-color: var(--steel);
-  opacity: 0;
   transform-origin: center;
+  will-change: transform, scale;
+  /* Nace como una gota diminuta y desenfocada, y se resuelve al crecer.
+     `scale` va aparte de `transform` porque el muelle del JS manda en este
+     último: así la entrada y la persecución no se pisan. */
+  opacity: 0;
+  scale: 0.22;
+  filter: blur(7px);
   transition:
     opacity 0.18s ease,
-    scale 0.26s cubic-bezier(0.3, 1.2, 0.4, 1);
-  scale: 0.86;
+    scale 0.44s cubic-bezier(0.3, 1.4, 0.4, 1),
+    filter 0.34s ease;
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.5),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
-    inset 0 -14px 24px -14px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(180, 205, 225, 0.24),
-    0 18px 40px -14px rgba(0, 0, 0, 0.75);
+    inset 0 1px 0 rgba(255, 255, 255, 0.42),
+    inset 0 -18px 30px -18px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(180, 205, 225, 0.2),
+    0 22px 46px -12px rgba(0, 0, 0, 0.8);
 }
 .lupa.viva {
   opacity: 1;
   scale: 1;
+  filter: blur(0);
+}
+/* El contenido refractado. El filtro SVG lo deforma solo en el canto. */
+.lupaimg {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-repeat: no-repeat;
+  background-color: var(--steel);
+}
+/* El canto: fresnel más dispersión cromática — un cristal grueso separa el
+   color como un prisma. Va tan tenue que se lee como grosor, no como color. */
+.lupa::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  padding: 1px;
+  background: linear-gradient(
+    148deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(150, 205, 255, 0.42) 11%,
+    rgba(255, 255, 255, 0.05) 31%,
+    transparent 52%,
+    rgba(255, 214, 190, 0.15) 71%,
+    rgba(180, 215, 255, 0.38) 88%,
+    rgba(255, 255, 255, 0.58) 100%
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lupa {
+    scale: 1;
+    filter: none;
+    transition: opacity 0.15s ease;
+  }
 }
 /* La imagen invita a acercarse. */
 .shotimg {
