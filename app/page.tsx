@@ -4,6 +4,7 @@ import { Navegacion } from "@/components/site/navegacion"
 import { VidrioLiquido } from "@/components/site/vidrio-liquido"
 import { CasoModal } from "@/components/site/caso-modal"
 import { Captura } from "@/components/site/captura"
+import { Lupa } from "@/components/site/lupa"
 import { GlassSpecular } from "@/components/site/glass-specular"
 import { PaletteSwitcher } from "@/components/site/palette-switcher"
 import {
@@ -217,6 +218,7 @@ export default function Home() {
 
       <VidrioLiquido />
       <GlassSpecular />
+      <Lupa />
       <PaletteSwitcher />
     </>
   )

@@ -82,7 +82,9 @@ export function Captura({
   if (shown) clases.push("shown")
 
   return (
-    <figure ref={ref} className={clases.join(" ")}>
+    // `data-full` es el archivo original: la lupa lo usa para ampliar nítido,
+    // en vez de escalar la versión reducida que se ve en pantalla.
+    <figure ref={ref} className={clases.join(" ")} data-full={src}>
       <div className="shotbar" aria-hidden="true">
         <i />
         <i />

@@ -1006,6 +1006,45 @@
   max-width: 340px;
 }
 
+/* La lupa: una burbuja que amplía el trozo de captura bajo el cursor.
+   Vive en <body> y la posiciona components/site/lupa.tsx.
+   El canto es lo que la hace vidrio — nada de vetas por dentro. */
+.lupa {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 80;
+  border-radius: 50%;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-color: var(--steel);
+  opacity: 0;
+  transform-origin: center;
+  transition:
+    opacity 0.18s ease,
+    scale 0.26s cubic-bezier(0.3, 1.2, 0.4, 1);
+  scale: 0.86;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    inset 0 -14px 24px -14px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(180, 205, 225, 0.24),
+    0 18px 40px -14px rgba(0, 0, 0, 0.75);
+}
+.lupa.viva {
+  opacity: 1;
+  scale: 1;
+}
+/* La imagen invita a acercarse. */
+.shotimg {
+  cursor: zoom-in;
+}
+@media (pointer: coarse) {
+  .shotimg {
+    cursor: default;
+  }
+}
+
 /* Fade-in de las portadas al entrar en viewport. Solo las que llevan `reveal`
    (los covers de la página); las del modal entran con la burbuja. */
 .shot.reveal {
