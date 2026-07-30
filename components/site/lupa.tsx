@@ -30,16 +30,22 @@ const ZOOM = 1.85
  * TAU es el tiempo que tarda en recorrer ~63 % de lo que le falta.
  */
 const TAU = 0.055 // seguimiento de la posición
-const TAU_VEL = 0.09 // suavizado de la velocidad, para que el estirón no parpadee
 
 /**
- * El agua se deforma rápido y se recupera despacio: esa asimetría es la
- * tensión superficial, y es lo que separa una gota de un óvalo elástico.
+ * El estirón nace de la SEPARACIÓN, no de la velocidad.
+ *
+ * Una gota arrastrada se alarga porque su masa se ha quedado atrás: lo que la
+ * deforma es la distancia entre donde está y donde tira el cursor. Con la
+ * velocidad como fuente, un golpe corto y rápido estiraba tanto como un
+ * arrastre largo — y eso no es lo que hace el agua.
+ *
+ * Además se deforma rápido y se redondea despacio: esa asimetría es la tensión
+ * superficial, y es lo que separa una gota de un óvalo elástico.
  */
-const TAU_TENSA = 0.045 // se estira
-const TAU_RELAJA = 0.2 // vuelve a ser redonda
-const ESTIRA = 0.0019 // por px/s
-const TENSION_MAX = 0.3
+const SEPARACION_PLENA = 95 // px de retraso que dan el estirón máximo
+const TENSION_MAX = 0.28
+const TAU_TENSA = 0.05 // se estira
+const TAU_RELAJA = 0.22 // vuelve a ser redonda
 
 /** Interpolación independiente de los fps: mismo tacto a 60 o a 144 Hz. */
 function acercar(actual: number, destino: number, tau: number, dt: number) {
@@ -161,8 +167,6 @@ export function Lupa() {
     let destY = 0
     let posX = 0
     let posY = 0
-    let velX = 0
-    let velY = 0
     let tension = 0
     let angulo = 0
     let arrancada = false
@@ -203,27 +207,24 @@ export function Lupa() {
       if (dt <= 0) return
 
       if (suave) {
-        const nx = acercar(posX, destX, TAU, dt)
-        const ny = acercar(posY, destY, TAU, dt)
-        // Velocidad medida del propio movimiento, suavizada aparte: así el
-        // estirón responde al viaje real y no salta de un frame a otro.
-        velX = acercar(velX, (nx - posX) / dt, TAU_VEL, dt)
-        velY = acercar(velY, (ny - posY) / dt, TAU_VEL, dt)
-        posX = nx
-        posY = ny
+        // Cuánto se ha quedado atrás la gota respecto al cursor: esta
+        // separación es a la vez el motivo del estirón y su dirección.
+        const dx = destX - posX
+        const dy = destY - posY
+        const separacion = Math.hypot(dx, dy)
 
-        const rapidez = Math.hypot(velX, velY)
-        const objetivo = Math.min(rapidez * ESTIRA, TENSION_MAX)
+        posX = acercar(posX, destX, TAU, dt)
+        posY = acercar(posY, destY, TAU, dt)
+
+        const objetivo = Math.min(separacion / SEPARACION_PLENA, 1) * TENSION_MAX
         // Asimétrico: se estira rápido, se redondea despacio.
         tension = acercar(tension, objetivo, objetivo > tension ? TAU_TENSA : TAU_RELAJA, dt)
-        // El ángulo solo se actualiza cuando hay viaje de verdad; si no, la
-        // gota giraría sobre sí misma al frenar.
-        if (rapidez > 24) angulo = (Math.atan2(velY, velX) * 180) / Math.PI
+        // El ángulo solo se refresca mientras el arrastre es real; si no, la
+        // gota giraría sobre sí misma al soltarla.
+        if (separacion > 6) angulo = (Math.atan2(dy, dx) * 180) / Math.PI
       } else {
         posX = destX
         posY = destY
-        velX = 0
-        velY = 0
         tension = 0
       }
 
@@ -247,8 +248,6 @@ export function Lupa() {
         // Nace exactamente donde está el cursor, redonda y quieta.
         posX = destX
         posY = destY
-        velX = 0
-        velY = 0
         tension = 0
         angulo = 0
         arrancada = true
