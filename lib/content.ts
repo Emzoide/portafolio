@@ -334,21 +334,75 @@ export const proyectos: Proyecto[] = [
   },
   {
     slug: "agentes-financieros",
-    estado: { clave: "produccion", texto: "En producción desde 2025" },
-    contexto: "Interamericana Norte · En producción",
-    titulo: "Agentes financieros que leen la base de datos en vivo",
+    // Presentado como capacidad/demo: es un agente en uso real, pero aquí se
+    // muestra con un dataset ficticio y sin colgarlo de un cliente.
+    estado: { clave: "listo", texto: "Demo interactivo · datos ficticios" },
+    contexto: "Agente de datos con IA",
+    titulo: "Un agente que consulta la base, hace el análisis y recomienda",
     resumen:
-      "Cronogramas de crédito vehicular, cálculo de mora y alertas de cartera que antes eran una hoja de cálculo actualizada a mano cada semana. El agente consulta Oracle, calcula al momento y avisa antes de que la cuota venza.",
-    rol: "Diseño del cálculo, capa de acceso a Oracle y el motor de alertas.",
-    codigo: { estado: "cerrado", nota: "Sistema interno · código cerrado" },
-    tags: ["Python", "FastAPI", "OracleDB", "Claude"],
+      "En vez de un tablero con preguntas fijas, un agente que se conecta a la base de datos, escribe su propia consulta, ejecuta el análisis en Python y responde la pregunta que se le acaba de ocurrir a quien decide: proyecta demanda, simula escenarios con su impacto en margen y detecta stock inmovilizado. Lo uso para eliminar la generación manual de reportes; aquí corre sobre datos de demostración.",
+    rol: "Diseño del agente: conexión a datos, generación de consultas, análisis en Python y la capa de recomendación.",
+    codigo: { estado: "cerrado", nota: "Agente propio · código cerrado" },
+    tags: ["Python", "SQL", "Claude", "Análisis de datos"],
     filas: [
-      { etiqueta: "Cartera vigente", valor: "S/ 4 812 900" },
-      { etiqueta: "Cuotas por vencer · 7 días", valor: "38" },
-      { etiqueta: "En mora > 30 días", valor: "12", alto: true },
-      { etiqueta: "Alertas enviadas hoy", valor: "26" },
+      { etiqueta: "Reportes manuales eliminados", valor: "sí", alto: true },
+      { etiqueta: "Consulta la base", valor: "en vivo" },
+      { etiqueta: "Escribe su propio SQL", valor: "sí" },
+      { etiqueta: "Análisis en Python", valor: "al momento" },
     ],
     progreso: 73,
+    panelNota: "Datos de demostración",
+    captura: "/capturas/agentes/agent-1.png",
+    caso: {
+      antes:
+        "Cada reporte se armaba a mano: alguien consultaba la base, exportaba a Excel y construía el análisis desde cero, otra vez, cada vez. Era lento y solo respondía la pregunta que ya sabías hacer — para una nueva, vuelta a empezar.",
+      decision: {
+        titulo: "Por qué un agente y no otro tablero",
+        texto:
+          "Un tablero responde preguntas fijas; el negocio hace preguntas nuevas. El agente conecta a la base, redacta su propia consulta y corre el análisis en el momento, así que contesta lo que se le pregunta, no lo que alguien previó hace meses. Y muestra su trabajo —la consulta, los pasos del cálculo— para que sea auditable y no una caja negra: cada número se puede rastrear hasta la fila que lo generó.",
+      },
+      partes: [
+        {
+          nombre: "Consulta la base y escribe su SQL",
+          texto:
+            "Entiende la pregunta en lenguaje natural, redacta la consulta contra el ERP o el data warehouse y trae los datos. La consulta queda a la vista: se ve exactamente qué le preguntó a la base.",
+          imgs: [
+            {
+              src: "/capturas/agentes/agent-2.png",
+              cap: "El agente redacta y ejecuta su propia consulta SQL",
+              width: 1443,
+              height: 972,
+            },
+          ],
+        },
+        {
+          nombre: "Proyecta y simula escenarios",
+          texto:
+            "Sobre el histórico corre regresión con tendencia y estacionalidad para proyectar demanda, y simula escenarios —una promoción, un cambio de precio— con su efecto en unidades, venta y margen antes de tomarlos.",
+          imgs: [
+            {
+              src: "/capturas/agentes/agent-1.png",
+              cap: "Proyección de demanda y simulación de un 2x1 con impacto en margen",
+              width: 1353,
+              height: 975,
+            },
+          ],
+        },
+        {
+          nombre: "Analiza y recomienda una acción",
+          texto:
+            "No se queda en el número: cruza rotación y capital inmovilizado, señala lo que está frenado y recomienda la acción concreta —qué SKU liquidar, qué proveedor renegociar— con el detalle que la sustenta.",
+          imgs: [
+            {
+              src: "/capturas/agentes/agent-3.png",
+              cap: "Análisis de rotación y recomendación de qué liquidar",
+              width: 1355,
+              height: 973,
+            },
+          ],
+        },
+      ],
+    },
   },
 ]
 
