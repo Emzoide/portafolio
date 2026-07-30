@@ -1006,6 +1006,27 @@
   max-width: 340px;
 }
 
+/* Fade-in de las portadas al entrar en viewport. Solo las que llevan `reveal`
+   (los covers de la página); las del modal entran con la burbuja. */
+.shot.reveal {
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s cubic-bezier(0.22, 0.68, 0.24, 1);
+}
+.shot.reveal:not(.shown) {
+  opacity: 0;
+  transform: translateY(10px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .shot.reveal {
+    transition: none;
+  }
+  .shot.reveal:not(.shown) {
+    opacity: 1;
+    transform: none;
+  }
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;

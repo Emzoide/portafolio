@@ -117,7 +117,7 @@ export default function Home() {
               </div>
 
               {p.captura ? (
-                <Captura src={p.captura} cap={p.panelNota} priority />
+                <Captura src={p.captura} cap={p.panelNota} reveal />
               ) : (
                 <div className="panel">
                   <div className="bar" aria-hidden="true">

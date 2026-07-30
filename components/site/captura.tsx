@@ -1,4 +1,7 @@
+"use client"
+
 import Image from "next/image"
+import { useEffect, useRef, useState } from "react"
 
 /**
  * Una captura del sistema, enmarcada.
@@ -11,9 +14,14 @@ import Image from "next/image"
  * de paisaje se deformaría o reservaría un hueco equivocado, así que le paso su
  * proporción real y la limito para que no domine.
  *
- * Algunas pruebas no son capturas puras del sistema sino correos o tarjetas de
- * cliente. En esos casos se puede pasar el tamaño real para que el navegador
- * reserve el alto correcto antes de cargar la imagen.
+ * `width`/`height` fijan la proporción real cuando la captura no es del formato
+ * horizontal estándar (correos, tarjetas), para que el navegador reserve el
+ * alto correcto y no haya salto de layout.
+ *
+ * `reveal` enciende el fade-in al entrar en viewport. Solo lo usan las portadas
+ * de la página: las capturas de dentro del modal ya entran con la burbuja, y
+ * animarlas otra vez recargaría. Arranca visible (si no hay JS, se ve igual);
+ * al montar, si está fuera de pantalla se oculta y se revela al hacer scroll.
  */
 export function Captura({
   src,
@@ -21,6 +29,7 @@ export function Captura({
   narrow = false,
   width,
   height,
+  reveal = false,
   priority = false,
 }: {
   src: string
@@ -28,12 +37,52 @@ export function Captura({
   narrow?: boolean
   width?: number
   height?: number
+  reveal?: boolean
   priority?: boolean
 }) {
   const [w, h] = [width ?? (narrow ? 722 : 1918), height ?? (narrow ? 880 : 976)]
+  const ref = useRef<HTMLElement>(null)
+  const [shown, setShown] = useState(true)
+
+  useEffect(() => {
+    if (!reveal) return
+    const el = ref.current
+    if (!el || matchMedia("(prefers-reduced-motion: reduce)").matches) return
+
+    const r = el.getBoundingClientRect()
+    const yaVisible = r.top < window.innerHeight * 0.9 && r.bottom > 0
+    if (yaVisible) return // en pantalla al cargar: no animar
+
+    setShown(false) // fuera de pantalla: ocultar sin que se vea el cambio
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShown(true)
+          io.disconnect()
+        }
+      },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+    )
+    io.observe(el)
+    // Red de seguridad: si el observer nunca dispara, revelar igual.
+    const t = window.setTimeout(() => {
+      setShown(true)
+      io.disconnect()
+    }, 1600)
+
+    return () => {
+      io.disconnect()
+      window.clearTimeout(t)
+    }
+  }, [reveal])
+
+  const clases = ["shot"]
+  if (narrow) clases.push("narrow")
+  if (reveal) clases.push("reveal")
+  if (shown) clases.push("shown")
 
   return (
-    <figure className={narrow ? "shot narrow" : "shot"}>
+    <figure ref={ref} className={clases.join(" ")}>
       <div className="shotbar" aria-hidden="true">
         <i />
         <i />
