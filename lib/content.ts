@@ -24,10 +24,14 @@ export const titular = {
   // El <em> se pinta con el color de acento.
   antes: "Convierto procesos manuales en sistemas que ",
   destacado: "devuelven horas.",
-  // Ojo: esta bajada tiene que seguir siendo cierta cuando cambie el estado de
-  // los proyectos. No prometas producción de algo que todavía no arranca.
+  /**
+   * Sin proyectos, fechas ni número de manos: la bajada tiene que seguir siendo
+   * cierta dentro de un año. La anterior decía "arranca este agosto" (caducaba
+   * en días) y "por una sola persona", que cierra la puerta a un puesto de
+   * equipo por una frase.
+   */
   bajada:
-    "Construyo integraciones, CRMs y agentes que reemplazan trabajo repetitivo. Dentro de una empresa automotriz con noventa asesores, y como freelance: el ecosistema completo con el que un taller arranca operaciones este agosto.",
+    "Analizo una operación hasta encontrar qué puede resolverse solo. Desde automatizaciones puntuales hasta ecosistemas completos, para que lo único que quede sobre la mesa sea el negocio.",
 }
 
 /**
