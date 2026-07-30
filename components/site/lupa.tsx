@@ -18,17 +18,24 @@ import { useEffect } from "react"
 const DIAMETRO = 200
 const ZOOM = 1.85
 
-// Muelle de persecución: rápido y casi sin rebote, como el interactiveSpring
-// de SwiftUI. La sensación líquida sale del estiramiento, no de la oscilación.
-const RESPUESTA = 0.13
-const AMORTIGUACION = 0.82
-const ESTIRA = 0.0022 // por px/s de velocidad
+/**
+ * Seguimiento viscoso, no muelle.
+ *
+ * Un muelle integrado paso a paso se vuelve inestable cuando es rígido: se pasa
+ * del destino y rebota solo, lo que se ve como temblor. El agua no rebota, es
+ * viscosa. Esto es suavizado exponencial: siempre estable, nunca oscila, y el
+ * retraso es proporcional a la distancia — que es justo como se arrastra un
+ * líquido.
+ *
+ * TAU es el tiempo que tarda en recorrer ~63 % de lo que le falta.
+ */
+const TAU = 0.055 // seguimiento de la posición
+const TAU_VEL = 0.1 // suavizado de la velocidad, para que el estirón no parpadee
+const ESTIRA = 0.0016 // por px/s
 
-function paso(pos: number, vel: number, destino: number, dt: number) {
-  const w = (2 * Math.PI) / RESPUESTA
-  const a = -w * w * (pos - destino) - 2 * AMORTIGUACION * w * vel
-  const v = vel + a * dt
-  return { pos: pos + v * dt, vel: v }
+/** Interpolación independiente de los fps: mismo tacto a 60 o a 144 Hz. */
+function acercar(actual: number, destino: number, tau: number, dt: number) {
+  return actual + (destino - actual) * (1 - Math.exp(-dt / tau))
 }
 
 /**
@@ -172,13 +179,22 @@ export function Lupa() {
 
       const dt = anterior ? Math.min((ahora - anterior) / 1000, 1 / 30) : 1 / 60
       anterior = ahora
+      if (dt <= 0) return
 
       if (suave) {
-        ;({ pos: posX, vel: velX } = paso(posX, velX, destX, dt))
-        ;({ pos: posY, vel: velY } = paso(posY, velY, destY, dt))
+        const nx = acercar(posX, destX, TAU, dt)
+        const ny = acercar(posY, destY, TAU, dt)
+        // Velocidad medida del propio movimiento, suavizada aparte: así el
+        // estirón responde al viaje real y no salta de un frame a otro.
+        velX = acercar(velX, (nx - posX) / dt, TAU_VEL, dt)
+        velY = acercar(velY, (ny - posY) / dt, TAU_VEL, dt)
+        posX = nx
+        posY = ny
       } else {
         posX = destX
         posY = destY
+        velX = 0
+        velY = 0
       }
 
       situar()
@@ -188,6 +204,9 @@ export function Lupa() {
     const abrir = (e: PointerEvent) => {
       const zona = (e.target as Element | null)?.closest?.<HTMLElement>(".shotimg")
       if (!zona) return
+      // pointerover salta en cada cambio de elemento bajo el cursor; si ya
+      // estamos en esta captura no hay que volver a nacer.
+      if (zona === activa) return
       const fuente = zona.closest<HTMLElement>(".shot")?.dataset.full
       if (!fuente) return
 

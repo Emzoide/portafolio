@@ -774,7 +774,10 @@
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
-    filter: blur(0);
+    /* `none` y no blur(0): el minificador colapsa blur(0) a blur(), que es
+       inválido — el panel se quedaba con el desenfoque del fotograma anterior
+       en vez de aclararse del todo. */
+    filter: none;
   }
 }
 @keyframes fondoEntra {
@@ -1019,26 +1022,38 @@
   pointer-events: none;
   transform-origin: center;
   will-change: transform, scale;
-  /* Nace como una gota diminuta y desenfocada, y se resuelve al crecer.
-     `scale` va aparte de `transform` porque el muelle del JS manda en este
-     último: así la entrada y la persecución no se pisan. */
+  /* Nace de la nada en el punto donde está el cursor y se infla; al salir se
+     desinfla hasta desaparecer. `scale` va aparte de `transform` porque el
+     seguimiento del JS manda en este último: entrada y persecución no se pisan.
+
+     Este bloque es además el estado de SALIDA, así que su transición es la del
+     desinflado: se encoge acelerando, como una burbuja que se cierra. */
   opacity: 0;
-  scale: 0.22;
-  filter: blur(7px);
+  scale: 0.04;
+  filter: blur(6px);
   transition:
-    opacity 0.18s ease,
-    scale 0.44s cubic-bezier(0.3, 1.4, 0.4, 1),
-    filter 0.34s ease;
+    opacity 0.26s ease-in,
+    scale 0.3s cubic-bezier(0.55, 0, 0.75, 0.2),
+    filter 0.26s ease-in;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.42),
     inset 0 -18px 30px -18px rgba(0, 0, 0, 0.55),
     0 0 0 1px rgba(180, 205, 225, 0.2),
     0 22px 46px -12px rgba(0, 0, 0, 0.8);
 }
+/* El inflado: crece con un punto de sobreimpulso, como una gota que se llena. */
 .lupa.viva {
   opacity: 1;
   scale: 1;
-  filter: blur(0);
+  /* `none` y no blur(0): el minificador colapsa blur(0) y blur(0px) a blur(),
+     que es inválido, y entonces el desenfoque de entrada no se quitaba nunca.
+     Al interpolar, el navegador trata none como la identidad del filtro, así
+     que la transición sigue siendo suave. */
+  filter: none;
+  transition:
+    opacity 0.14s ease-out,
+    scale 0.42s cubic-bezier(0.22, 1.35, 0.36, 1),
+    filter 0.3s ease-out;
 }
 /* El contenido refractado. El filtro SVG lo deforma solo en el canto. */
 .lupaimg {
