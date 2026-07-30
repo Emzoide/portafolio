@@ -164,10 +164,10 @@ export const proyectos: Proyecto[] = [
             "Los chats llegan por WhatsApp Cloud API a una bandeja donde un mensaje se convierte en prospecto y un prospecto en cliente, sin salir del sistema.",
           imgs: [
             {
-              src: "/capturas/red-bandeja.png",
-              cap: "Bandeja de WhatsApp: bot, ventana de 24h y toma humana",
-              width: 1918,
-              height: 981,
+              src: "/capturas/red-chat.png",
+              cap: "El bot atiende con menú, escala a un asesor y respeta la ventana de 24h",
+              width: 1916,
+              height: 971,
             },
             {
               src: "/capturas/red-embudo.png",
