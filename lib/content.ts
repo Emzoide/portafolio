@@ -435,6 +435,12 @@ export type Nota = {
   stack: string
   contexto: string
   parrafos: string[]
+  /**
+   * Casi todo lo de aquí es de clientes y no se puede enseñar. Cuando sí se
+   * puede, el enlace vale doble: es la única forma de que alguien compruebe
+   * el código en vez de creerse lo que dice el texto.
+   */
+  codigo?: { nota: string; url?: string }
 }
 
 
@@ -469,14 +475,19 @@ export const archivo: Nota[] = [
   {
     slug: "chatbot-comercial",
     anio: "2026",
-    nombre: "Chatbot comercial con IA",
-    detalle: "Primer filtro de la venta: atiende, compara, agenda y deriva al asesor",
-    stack: "Laravel · IA",
+    nombre: "Motor conversacional de WhatsApp",
+    detalle: "Los flujos se configuran desde la base de datos, sin tocar código",
+    stack: "Laravel · WhatsApp API",
     contexto: "Interamericana Norte · En producción",
+    codigo: {
+      nota: "Ver el código en GitHub",
+      url: "https://github.com/Emzoide/WhatsApp-Modular-Chatbot-NPS-Engine",
+    },
     parrafos: [
-      "Un prospecto que escribía de noche o en fin de semana esperaba al día siguiente, y en venta esa espera cuesta.",
-      "El agente atiende desde el primer mensaje: muestra las promociones vigentes, propone vehículos según lo que el cliente busca, compara modelos con precisión, entra en el detalle de cada uno y agenda la cita cuando ya hay un vehículo de por medio. Si la conversación lo pide, deriva a un asesor.",
-      "Lo interesante no fue solo el tiempo. Al hacer de primer filtro, el lead que llega al asesor viene entendido —qué busca, qué comparó, hasta dónde llegó—, así que hay menos volumen que perseguir y más posibilidad real de cerrar.",
+      "Un prospecto que escribía de noche o en fin de semana esperaba al día siguiente, y en venta esa espera cuesta. Pero el problema de fondo era otro: cada campaña nueva —una encuesta, un seguimiento, una promoción— significaba volver a programar el bot.",
+      "Así que no construí un chatbot, construí el motor que los genera. Los flujos son cien por cien declarativos: se definen desde la base de datos, con sus saltos condicionales y sus ramas, y para lanzar una conversación nueva no se toca una línea de código.",
+      "Por dentro son patrones que separan qué se pregunta de cómo se pregunta —Strategy, Template Method, State—, más control de sesiones y limitación de frecuencia para aguantar el volumen de WhatsApp sin que la API corte.",
+      "Encima de eso corre la parte comercial: muestra promociones, propone vehículos según lo que el cliente busca, compara modelos, agenda la cita y deriva a un asesor cuando la conversación lo pide. Al hacer de primer filtro, el lead llega entendido —qué busca, qué comparó, hasta dónde llegó—, así que hay menos volumen que perseguir y más posibilidad real de cerrar.",
       "El tiempo de respuesta a un prospecto nuevo bajó alrededor de un 40 %.",
     ],
   },
@@ -506,6 +517,25 @@ export const archivo: Nota[] = [
       "Las pistas del centro de Piura estaban rotas y llegar al hotel se había vuelto un problema de verdad: el huésped daba vueltas, se metía por donde no debía o directamente se rendía.",
       "Hice una web que lo manda siempre a la sede más cercana y le arma la ruta. Puede partir de su ubicación actual o, si todavía no salió, elegir desde dónde piensa hacerlo.",
       "Ahí está el detalle que importa: la gente no se ubica por direcciones, se ubica por referencias. Así que las opciones de partida son centros comerciales y sitios conocidos de la zona, no un campo de dirección en blanco.",
+    ],
+  },
+  {
+    slug: "auth-facial",
+    // TODO: confirmar el año de la tesis.
+    anio: "2025",
+    nombre: "Autenticación facial biométrica",
+    detalle: "Verificación de identidad para procesos electorales, con anti-spoofing",
+    stack: "FastAPI · React Native",
+    contexto: "Proyecto de tesis · Código público",
+    codigo: {
+      nota: "Ver el código en GitHub",
+      url: "https://github.com/Emzoide/face-auth-system",
+    },
+    parrafos: [
+      "Verificar quién es quién en un proceso electoral es un problema de confianza: hay que estar seguro de que la persona es quien dice ser, y que no está usando la foto de otro.",
+      "El sistema reconoce el rostro con ArcFace, con una precisión del 99,8 %, y lleva una capa anti-spoofing que descarta los intentos con una foto impresa o con una pantalla delante de la cámara. Reconocer una cara es la parte fácil; saber que hay una persona viva delante es la difícil.",
+      "Son tres capas: una API REST que hace el trabajo, un panel web para administrar y una app móvil en iOS y Android que verifica con la cámara en tiempo real. Con roles separados y auditoría completa, porque en un proceso electoral toda acción tiene que poder rastrearse.",
+      "Es el único proyecto de esta lista cuyo código se puede abrir y leer entero.",
     ],
   },
 ]

@@ -43,7 +43,15 @@ export function NotaModal({ nota }: { nota: Nota }) {
             <dt>Stack</dt>
             <dd>{nota.stack}</dd>
             <dt>Código</dt>
-            <dd>Sistema interno · código cerrado</dd>
+            <dd>
+              {nota.codigo?.url ? (
+                <a href={nota.codigo.url} target="_blank" rel="noreferrer">
+                  {nota.codigo.nota}
+                </a>
+              ) : (
+                (nota.codigo?.nota ?? "Sistema interno · código cerrado")
+              )}
+            </dd>
           </dl>
         </div>
       </div>
