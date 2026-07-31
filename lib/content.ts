@@ -552,7 +552,9 @@ export const sobreMi = {
     // Y así el cierre queda en lo que interesa que suene, no en una universidad.
     "Casi todo lo que sé lo aprendí construyendo cosas que alguien necesitaba el lunes.",
   ],
-  cierre: "¿Tienes un proceso que todavía se hace a mano?",
+  // Corta y contestable: quien la lee ya tiene la respuesta en la cabeza, y esa
+  // respuesta es la primera línea del correo que va a escribir.
+  cierre: "¿Qué se sigue haciendo a mano?",
 }
 
 /**
