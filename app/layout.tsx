@@ -26,10 +26,25 @@ const data = JetBrains_Mono({
   display: "swap",
 })
 
+/**
+ * De dónde cuelgan las imágenes sociales.
+ *
+ * Tienen que ser URLs absolutas o WhatsApp y LinkedIn no las cargan, así que
+ * sin esto la tarjeta de compartir saldría apuntando a localhost.
+ *
+ * NEXT_PUBLIC_SITIO manda cuando hay dominio propio; si no, se usa el que
+ * Vercel inyecta en cada despliegue, y en local el puerto de desarrollo.
+ */
+function sitio() {
+  if (process.env.NEXT_PUBLIC_SITIO) return process.env.NEXT_PUBLIC_SITIO
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL)
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`
+  return "http://localhost:3100"
+}
+
 export const metadata: Metadata = {
-  // Necesario para que las URLs de las imágenes sociales se resuelvan absolutas.
-  // Cambiar por el dominio real al desplegar.
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITIO ?? "http://localhost:3100"),
+  metadataBase: new URL(sitio()),
   title: `${perfil.nombre} — ${perfil.rol}`,
   description: titular.bajada,
   openGraph: {
