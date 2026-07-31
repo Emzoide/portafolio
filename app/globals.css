@@ -1025,6 +1025,38 @@
 .shotimg {
   position: relative;
   line-height: 0;
+  /* Cuando es <button>: sin herencia de estilos de control. */
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+}
+
+/* La captura que abre su ficha reacciona como el botón de al lado: se pulsa,
+   así que tiene que parecerlo. */
+.shot.abrible {
+  cursor: pointer;
+  transition:
+    border-color 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.shot.abrible:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  box-shadow:
+    0 20px 44px -28px rgba(0, 0, 0, 0.9),
+    0 0 0 1px color-mix(in srgb, var(--accent) 22%, transparent);
+}
+/* La lupa pone zoom-in, pero aquí el clic no amplía: abre la ficha. */
+.shot.abrible .shotimg {
+  cursor: pointer;
+}
+.shot.abrible .shotimg:focus-visible {
+  outline: 2px solid var(--accent-lit);
+  outline-offset: -4px;
+  border-radius: 4px;
 }
 .shotimg img {
   width: 100%;

@@ -119,7 +119,13 @@ export default function Home() {
               </div>
 
               {p.captura ? (
-                <Captura src={p.captura} cap={p.panelNota} reveal />
+                <Captura
+                  src={p.captura}
+                  cap={p.panelNota}
+                  reveal
+                  abre={p.slug}
+                  etiqueta={p.titulo}
+                />
               ) : (
                 <div className="panel">
                   <div className="bar" aria-hidden="true">

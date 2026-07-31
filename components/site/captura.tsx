@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
+import { abrirFicha } from "./dialogo"
 
 /**
  * Una captura del sistema, enmarcada.
@@ -30,6 +31,8 @@ export function Captura({
   width,
   height,
   reveal = false,
+  abre,
+  etiqueta,
   priority = false,
 }: {
   src: string
@@ -38,6 +41,10 @@ export function Captura({
   width?: number
   height?: number
   reveal?: boolean
+  /** Slug de la ficha que abre al pulsarla. Sin esto, la captura solo se mira. */
+  abre?: string
+  /** Qué anunciar al pulsarla. El pie no sirve: suele ser "Datos de demostración". */
+  etiqueta?: string
   priority?: boolean
 }) {
   const [w, h] = [width ?? (narrow ? 722 : 1918), height ?? (narrow ? 880 : 976)]
@@ -80,6 +87,18 @@ export function Captura({
   if (narrow) clases.push("narrow")
   if (reveal) clases.push("reveal")
   if (shown) clases.push("shown")
+  if (abre) clases.push("abrible")
+
+  const imagen = (
+    <Image
+      src={src}
+      alt={cap ?? "Captura del sistema"}
+      width={w}
+      height={h}
+      sizes={narrow ? "360px" : "(max-width: 860px) 100vw, 640px"}
+      priority={priority}
+    />
+  )
 
   return (
     // `data-full` es el archivo original: la lupa lo usa para ampliar nítido,
@@ -90,16 +109,24 @@ export function Captura({
         <i />
         <i />
       </div>
-      <div className="shotimg">
-        <Image
-          src={src}
-          alt={cap ?? "Captura del sistema"}
-          width={w}
-          height={h}
-          sizes={narrow ? "360px" : "(max-width: 860px) 100vw, 640px"}
-          priority={priority}
-        />
-      </div>
+
+      {/* Cuando la captura abre una ficha es un <button> de verdad y no un div
+          con onClick: así se llega con el tabulador y responde a Enter, igual
+          que el botón de al lado. La lupa sigue funcionando porque busca por
+          la clase, no por la etiqueta. */}
+      {abre ? (
+        <button
+          type="button"
+          className="shotimg"
+          onClick={() => abrirFicha(abre)}
+          aria-label={etiqueta ? `Leer el caso: ${etiqueta}` : "Leer el caso"}
+        >
+          {imagen}
+        </button>
+      ) : (
+        <div className="shotimg">{imagen}</div>
+      )}
+
       {cap ? <figcaption>{cap}</figcaption> : null}
     </figure>
   )
