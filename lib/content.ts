@@ -532,8 +532,9 @@ export const trayectoria = {
       titulo: "Por mi cuenta",
       pie: "Clientes que me buscaron directamente",
       pasos: [
-        { fecha: "2026", cargo: "Ecosistema completo para un taller" },
+        { fecha: "2025", cargo: "Rutas al hotel más cercano" },
         { fecha: "2026", cargo: "Plataforma de ausentismo y rotación" },
+        { fecha: "2026", cargo: "Ecosistema completo para un taller" },
       ],
     },
   ],
@@ -546,17 +547,29 @@ export const sobreMi = {
     "Desde entonces me cuesta dar algo por terminado. Cuando miro un sistema que ya funciona, lo que encuentro son aristas: lo que todavía se le puede agregar para que el proceso sea mejor. Completo no llega a estar nunca, porque siempre aparece algo nuevo — y esa es justamente la parte que me gusta.",
     "De ahí sale mi forma de trabajar. Cuando alguien se pasa la mañana copiando datos de una pantalla a otra, no está usando lo único que una máquina no le puede dar, que es criterio. Mi trabajo es quitarle esa mañana de encima.",
     "En los encargos por mi cuenta eso se vuelve más claro todavía: quien me contrata tiene un negocio que atender, no un sistema que operar. Así que la pregunta que me hago, y me la hago muchas veces seguidas, es qué arista falta para que la operación siga sola y lo único que quede sobre su mesa sea lo que de verdad necesita su cabeza.",
-    "Soy bachiller en Ingeniería de Sistemas por la Universidad Tecnológica del Perú. Casi todo lo demás lo aprendí construyendo cosas que alguien necesitaba el lunes.",
+    // La formación sale de aquí y baja al bloque de credenciales: un dato
+    // estructurado se encuentra escaneando, uno en prosa puede que ni se lea.
+    // Y así el cierre queda en lo que interesa que suene, no en una universidad.
+    "Casi todo lo que sé lo aprendí construyendo cosas que alguien necesitaba el lunes.",
   ],
   cierre: "¿Tienes un proceso que todavía se hace a mano?",
 }
 
 /**
- * En una línea sobria, no en tarjetas ni barras de porcentaje. Un certificado
- * dice lo que hiciste; un "React 92 %" no dice nada y se nota.
+ * Formación y certificaciones, en una línea sobria cada una: ni tarjetas ni
+ * barras de porcentaje. Un certificado dice lo que hiciste; un "React 92 %" no
+ * dice nada y se nota.
+ *
+ * La carrera va al final, de base. Lo demás en orden de recencia, así que lo
+ * primero que se lee es lo último que aprendió.
  */
 export const certificaciones = [
   { nombre: "Claude Code", emisor: "Anthropic", anio: "2026" },
   { nombre: "Foundational C#", emisor: "Microsoft · freeCodeCamp", anio: "2025" },
   { nombre: "Cloud Computing: AWS · Azure · GCP", emisor: "UNI", anio: "2025" },
+  {
+    nombre: "Ingeniería de Sistemas e Informática",
+    emisor: "Universidad Tecnológica del Perú",
+    anio: "2020 — 2024",
+  },
 ]

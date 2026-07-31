@@ -172,7 +172,7 @@ export default function Home() {
               <p key={t.slice(0, 24)}>{t}</p>
             ))}
             <dl className="certs">
-              <dt>Certificaciones</dt>
+              <dt>Formación</dt>
               {certificaciones.map((c) => (
                 <dd key={c.nombre}>
                   {c.nombre} <span>{c.emisor}</span> <i>{c.anio}</i>
