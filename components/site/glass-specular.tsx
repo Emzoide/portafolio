@@ -20,7 +20,8 @@ export function GlassSpecular() {
     let activo: HTMLElement | null = null
 
     const mover = (e: PointerEvent) => {
-      const objetivo = (e.target as Element | null)?.closest<HTMLElement>(".glass") ?? null
+      // Los botones de "Leer el caso" también responden: son capa de control.
+      const objetivo = (e.target as Element | null)?.closest<HTMLElement>(".glass, .read") ?? null
 
       if (objetivo !== activo) {
         activo?.style.setProperty("--spec", "0")

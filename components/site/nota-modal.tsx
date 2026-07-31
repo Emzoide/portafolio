@@ -11,7 +11,7 @@ import { useDialogo } from "./dialogo"
  * los tres casos.
  */
 export function NotaModal({ nota }: { nota: Nota }) {
-  const { ref, cerrar } = useDialogo(nota.slug)
+  const { ref, cerrar } = useDialogo(nota.slug, nota.nombre)
 
   return (
     <dialog

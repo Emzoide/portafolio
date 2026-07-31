@@ -12,7 +12,7 @@ import { useDialogo } from "./dialogo"
  * gratis, sin librerías ni trampas de accesibilidad.
  */
 export function CasoModal({ proyecto }: { proyecto: Proyecto }) {
-  const { ref, abrir, cerrar } = useDialogo(proyecto.slug)
+  const { ref, abrir, cerrar } = useDialogo(proyecto.slug, proyecto.titulo)
   const caso = proyecto.caso
 
   if (!caso) return null
@@ -20,7 +20,9 @@ export function CasoModal({ proyecto }: { proyecto: Proyecto }) {
   return (
     <>
       <button type="button" className="read" onClick={abrir}>
-        Leer el caso
+        {/* En un span y no suelto: el resplandor que sigue al puntero va
+            posicionado, y lo posicionado pinta por encima del texto en flujo. */}
+        <span>Leer el caso</span>
       </button>
 
       <dialog

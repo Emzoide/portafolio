@@ -17,9 +17,35 @@ export function abrirFicha(slug: string) {
   document.dispatchEvent(new CustomEvent(EVENTO, { detail: slug }))
 }
 
-export function useDialogo(slug: string) {
+/**
+ * Avisa de que alguien abrió una ficha. Solo la primera vez de cada una por
+ * sesión, y en segundo plano: si el aviso falla o tarda, a quien está mirando
+ * la página no le pasa nada.
+ */
+const AVISADOS = new Set<string>()
+
+function avisar(nombre: string) {
+  if (AVISADOS.has(nombre)) return
+  AVISADOS.add(nombre)
+  const cuerpo = JSON.stringify({ caso: nombre })
+  // sendBeacon sobrevive a que la pestaña se cierre justo después.
+  if (navigator.sendBeacon?.(("/api/aviso"), new Blob([cuerpo], { type: "application/json" })))
+    return
+  void fetch("/api/aviso", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: cuerpo,
+    keepalive: true,
+  }).catch(() => {})
+}
+
+export function useDialogo(slug: string, nombre?: string) {
   const ref = useRef<HTMLDialogElement>(null)
   const [abierto, setAbierto] = useState(false)
+
+  useEffect(() => {
+    if (abierto && nombre) avisar(nombre)
+  }, [abierto, nombre])
 
   /**
    * El fondo no debe correr mientras hay una ventana abierta. Se mira si queda
