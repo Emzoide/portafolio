@@ -120,7 +120,9 @@ export const proyectos: Proyecto[] = [
     slug: "red-automotriz",
     contexto: "Freelance · Red Automotriz",
     titulo: "El ecosistema con el que un taller deja de trabajar en papel",
-    estado: { clave: "listo", texto: "Construido y entregado · arranca en agosto de 2026" },
+    // Sin "agosto": esa fecha caducaba en dias y dejaba el estado desactualizado
+    // solo. Asi sigue siendo cierto antes y despues del arranque.
+    estado: { clave: "listo", texto: "Entregado en 2026 · el taller arranca operaciones con él" },
     resumen:
       "Una empresa me buscó para que le construyera el sistema con el que iba a operar su taller. Vehículos, clientes, órdenes de trabajo, stock, facturación electrónica ante SUNAT, atención por WhatsApp y fidelización, en un solo ecosistema. Lo diseñé, lo construí y lo entregué solo.",
     rol: "Todo: arquitectura, base de datos, backend, interfaz, integraciones y despliegue.",
@@ -251,7 +253,7 @@ export const proyectos: Proyecto[] = [
     // trabajadores. La escala impresiona más que el nombre y no expone a nadie.
     contexto: "Freelance · Agroexportadora en Piura",
     titulo: "El cruce manual de asistencia de ~4.700 personas, resuelto en segundos",
-    estado: { clave: "produccion", texto: "En uso · reemplazó el cruce manual mensual" },
+    estado: { clave: "produccion", texto: "En uso desde 2026 · reemplazó el cruce manual mensual" },
     resumen:
       "El área de RR.HH. de una agroindustrial con cerca de 4.700 trabajadores controlaba el ausentismo cruzando a mano, cada mes, dos Excel de miles de filas. Le construí una herramienta de escritorio que se abre con doble clic —sin instalar nada, sin internet, sin costo de operación—: se arrastra el archivo de marcaciones y en segundos salen el ausentismo, la rotación y las alertas de personal en riesgo de cese.",
     rol: "Todo: análisis del formato del agrodata, motor de cálculo, interfaz, gráficos y empaquetado.",
@@ -347,7 +349,7 @@ export const proyectos: Proyecto[] = [
     slug: "agentes-financieros",
     // Presentado como capacidad/demo: es un agente en uso real, pero aquí se
     // muestra con un dataset ficticio y sin colgarlo de un cliente.
-    estado: { clave: "listo", texto: "Demo interactivo · datos ficticios" },
+    estado: { clave: "listo", texto: "2026 · demo interactivo con datos ficticios" },
     contexto: "Agente de datos con IA",
     titulo: "Un agente que consulta la base, hace el análisis y recomienda",
     resumen:
@@ -439,7 +441,7 @@ export type Nota = {
 export const archivo: Nota[] = [
   {
     slug: "digitalizacion-documental",
-    anio: "2025",
+    anio: "2025 — 2026",
     nombre: "Digitalización documental",
     detalle: "Cada compra de vehículo pasa a un expediente virtual, con firmas y aprobaciones",
     stack: "PHP · Laravel",
@@ -453,7 +455,7 @@ export const archivo: Nota[] = [
   },
   {
     slug: "plataforma-integraciones",
-    anio: "2025",
+    anio: "2026",
     nombre: "Plataforma de integraciones",
     detalle: "La API de la empresa: un punto de entrada único, con permisos por cuenta",
     stack: "Laravel · API REST",
@@ -466,7 +468,7 @@ export const archivo: Nota[] = [
   },
   {
     slug: "chatbot-comercial",
-    anio: "2025",
+    anio: "2026",
     nombre: "Chatbot comercial con IA",
     detalle: "Primer filtro de la venta: atiende, compara, agenda y deriva al asesor",
     stack: "Laravel · IA",
