@@ -29,3 +29,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# notas de trabajo internas
+/archivo-v0
+/docs
