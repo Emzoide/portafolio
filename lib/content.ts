@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Todo el contenido del sitio vive aquí.
  *
  * La idea es que puedas editar textos, cifras y proyectos sin abrir un solo
@@ -61,10 +61,10 @@ export const metricas = [
     abre: "chatbot-comercial",
   },
   {
-    valor: "+20 %",
-    nota: "Entrada de leads tras optimizar el sitio comercial",
-    corto: "Entrada de leads",
-    abre: "sitio-comercial",
+    valor: "0,2 s",
+    nota: "Lo que antes costaba tres días de cruce manual en Excel",
+    corto: "Cruce de asistencia",
+    abre: "ausentismo-rotacion",
   },
 ]
 
@@ -418,8 +418,9 @@ export const proyectos: Proyecto[] = [
 ]
 
 /**
- * Lo demás de Interamericana, mencionado sin desarrollar. Tres casos completos
- * y una lista pesan más que seis casos compitiendo entre ellos.
+ * El resto del trabajo, mencionado sin desarrollar: casi todo de Interamericana
+ * y un encargo freelance. Tres casos completos y una lista pesan más que ocho
+ * casos compitiendo entre ellos.
  *
  * Cada entrada abre una nota corta —solo texto, sin capturas— para que se pueda
  * ampliar sin robarle protagonismo a los casos destacados.
@@ -434,54 +435,46 @@ export type Nota = {
   parrafos: string[]
 }
 
+
 export const archivo: Nota[] = [
-  {
-    slug: "crm-unificado",
-    anio: "2025",
-    nombre: "CRM comercial unificado",
-    detalle: "Agendamiento, prospectos, postventa y facturación conectados al ERP por API REST",
-    stack: "Laravel · React",
-    contexto: "Interamericana Norte · En producción",
-    parrafos: [
-      "La operación comercial vivía repartida entre el sistema de agendamiento, el ERP y varias hojas sueltas, y el mismo dato se escribía en cada una.",
-      "Junté agendamiento, prospectos, postventa y facturación en un solo ecosistema conectado al ERP por API REST. Una cita agendada crea sola su orden de trabajo, su vehículo y su cliente: nadie vuelve a escribir la placa dos veces.",
-    ],
-  },
   {
     slug: "digitalizacion-documental",
     anio: "2025",
     nombre: "Digitalización documental",
-    detalle: "Diez horas al mes recuperadas por cada uno de los noventa asesores",
-    stack: "PHP · S3",
+    detalle: "Cada compra de vehículo pasa a un expediente virtual, con firmas y aprobaciones",
+    stack: "PHP · Laravel",
     contexto: "Interamericana Norte · En producción",
     parrafos: [
-      "Cada venta movía una carpeta de papel que pasaba por varias manos para juntar firmas y aprobaciones. El expediente viajaba, esperaba y a veces se perdía.",
-      "Lo reemplacé por documentos digitales con flujo de aprobación por roles: cada quien ve lo que le toca y aprueba desde donde esté. El asesor dejó de perseguir papeles.",
-      "Son unas diez horas al mes recuperadas por asesor. En un equipo de noventa, alrededor de 900 horas mensuales que vuelven a la venta.",
+      "Cada compra de vehículo movía una carpeta de papel entre oficinas para juntar revisiones, aprobaciones y firmas. El expediente viajaba, esperaba, ocupaba estanterías enteras y a veces se traspapelaba.",
+      "Ahora esa compra vive en un expediente virtual: revisiones, aprobaciones y firmas se resuelven ahí mismo, con las exigencias legales cubiertas. Se acabaron los viajes a firmar, el redigitado y los metros de archivador.",
+      "El sistema se adapta al procedimiento de cada marca. Representábamos veintiuna y varias exigían su propio juego de documentos: si Ford pedía unos determinados, solo esos aparecen cuando la venta es Ford.",
+      "Cada asesor ve qué le falta por regularizar, así que el pendiente deja de descubrirse tarde. Son unas diez horas al mes recuperadas por asesor; en un equipo de noventa, alrededor de 900 horas mensuales.",
     ],
   },
   {
     slug: "plataforma-integraciones",
     anio: "2025",
     nombre: "Plataforma de integraciones",
-    detalle: "Un punto de entrada único para CRM, agendamiento y proveedores externos",
-    stack: "FastAPI",
+    detalle: "La API de la empresa: un punto de entrada único, con permisos por cuenta",
+    stack: "Laravel · API REST",
     contexto: "Interamericana Norte · En producción",
     parrafos: [
-      "Cada proveedor nuevo significaba un puente a medida, y cada puente había que mantenerlo aparte.",
-      "Construí una plataforma que centraliza esas conexiones: el CRM, el sistema de agendamiento y los proveedores externos entran por el mismo sitio. Sumar uno nuevo dejó de ser un proyecto.",
+      "Las marcas que representábamos pedían acceso a los datos de la operación, y cada pedido nuevo terminaba en un puente a medida que después había que mantener aparte.",
+      "Construí la API de la empresa: un único punto por donde entran todas las integraciones, sea de una marca, del CRM, del sistema de agendamiento o de un proveedor externo. Sumar a alguien nuevo dejó de obligar a reescribir la operación.",
+      "Con permisos por cuenta: cada usuario que se genera alcanza solo el apartado para el que fue autorizado, y nada más.",
     ],
   },
   {
     slug: "chatbot-comercial",
     anio: "2025",
     nombre: "Chatbot comercial con IA",
-    detalle: "Atiende fuera de horario y escala a un humano cuando corresponde",
-    stack: "Python",
+    detalle: "Primer filtro de la venta: atiende, compara, agenda y deriva al asesor",
+    stack: "Laravel · IA",
     contexto: "Interamericana Norte · En producción",
     parrafos: [
       "Un prospecto que escribía de noche o en fin de semana esperaba al día siguiente, y en venta esa espera cuesta.",
-      "El asistente atiende desde el primer mensaje, resuelve lo que puede y escala a un asesor cuando la conversación lo pide, sin dejar al cliente esperando a que alguien abra la oficina.",
+      "El agente atiende desde el primer mensaje: muestra las promociones vigentes, propone vehículos según lo que el cliente busca, compara modelos con precisión, entra en el detalle de cada uno y agenda la cita cuando ya hay un vehículo de por medio. Si la conversación lo pide, deriva a un asesor.",
+      "Lo interesante no fue solo el tiempo. Al hacer de primer filtro, el lead que llega al asesor viene entendido —qué busca, qué comparó, hasta dónde llegó—, así que hay menos volumen que perseguir y más posibilidad real de cerrar.",
       "El tiempo de respuesta a un prospecto nuevo bajó alrededor de un 40 %.",
     ],
   },
@@ -489,25 +482,28 @@ export const archivo: Nota[] = [
     slug: "catalogo-digital",
     anio: "2024",
     nombre: "Catálogo digital interactivo",
-    detalle: "Visualización de vehículos con panel administrativo propio",
+    detalle: "El equipo comercial arma sus propias fichas, con enlace directo a cotizar",
     stack: "Laravel · JS",
     contexto: "Interamericana Norte · En producción",
     parrafos: [
-      "El catálogo de la web dependía de que alguien de sistemas lo tocara cada vez que cambiaba un precio o entraba una versión nueva.",
-      "Le di al equipo comercial su propio panel: ahora publican y actualizan sin intermediarios, y el catálogo deja de quedarse viejo.",
+      "El catálogo dependía de que alguien de sistemas lo tocara cada vez que entraba una versión nueva o cambiaba un precio.",
+      "Le di al equipo comercial su propio panel: agregan y quitan páginas, y cada vehículo admite texto, imágenes que pasan en carrusel y videos de YouTube, con el nivel de detalle que quieran contar.",
+      "Cada ficha lleva enlace directo a cotizar, así que el catálogo dejó de ser una vitrina y empezó a traer leads.",
     ],
   },
   {
-    slug: "sitio-comercial",
-    anio: "2024",
-    nombre: "Sitio comercial y microservicios",
-    detalle: "Core Web Vitals de 61 a 90 y nuevos apartados de venta",
-    stack: "JS · Angular",
-    contexto: "Interamericana Norte · En producción",
+    slug: "rutas-hotel",
+    anio: "2025",
+    // Sin nombrar la cadena, igual que con la agroexportadora: el problema se
+    // entiende sin saber de quién era el hotel.
+    nombre: "Rutas al hotel más cercano",
+    detalle: "Llevar al huésped a la sede correcta con las calles del centro rotas",
+    stack: "React",
+    contexto: "Freelance · Cadena hotelera en Piura",
     parrafos: [
-      "El sitio cargaba lento y perdía visitas antes de que llegaran a ver un vehículo.",
-      "Trabajé el rendimiento —los Core Web Vitals pasaron de 61 a 90— y sumé apartados comerciales nuevos apoyados en microservicios, para que cada uno se pudiera cambiar sin tocar el resto.",
-      "La entrada de leads subió alrededor de un 20 %.",
+      "Las pistas del centro de Piura estaban rotas y llegar al hotel se había vuelto un problema de verdad: el huésped daba vueltas, se metía por donde no debía o directamente se rendía.",
+      "Hice una web que lo manda siempre a la sede más cercana y le arma la ruta. Puede partir de su ubicación actual o, si todavía no salió, elegir desde dónde piensa hacerlo.",
+      "Ahí está el detalle que importa: la gente no se ubica por direcciones, se ubica por referencias. Así que las opciones de partida son centros comerciales y sitios conocidos de la zona, no un campo de dirección en blanco.",
     ],
   },
 ]
