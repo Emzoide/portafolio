@@ -175,7 +175,12 @@ export default function Home() {
               <dt>Formación</dt>
               {certificaciones.map((c) => (
                 <dd key={c.nombre}>
-                  {c.nombre} <span>{c.emisor}</span> <i>{c.anio}</i>
+                  {/* Nombre y emisor van juntos en una columna que sabe
+                      romperse; el año se queda a la derecha en la suya. */}
+                  <span className="qué">
+                    {c.nombre} <span className="quién">{c.emisor}</span>
+                  </span>
+                  <i>{c.anio}</i>
                 </dd>
               ))}
             </dl>

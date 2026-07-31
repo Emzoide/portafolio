@@ -1510,22 +1510,28 @@
   font-size: 10.5px;
   margin-bottom: 8px;
 }
+/* Dos columnas y sin envolver: el texto se rompe dentro de la suya y el año se
+   queda a la derecha. Con flex-wrap, una entrada larga —la carrera— empujaba
+   el año a una línea propia. */
 .certs dd {
   display: flex;
-  flex-wrap: wrap;
   align-items: baseline;
-  gap: 10px;
+  gap: 14px;
   margin: 0;
   padding: 5px 0;
   color: var(--mist);
 }
-.certs dd span {
+.certs dd .qué {
+  min-width: 0; /* deja que el texto se rompa en vez de desbordar */
+}
+.certs dd .quién {
   color: var(--dim);
 }
 .certs dd i {
   font-style: normal;
   color: var(--faint);
   margin-left: auto;
+  flex: none;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1680,13 +1686,34 @@
     grid-template-columns: 1fr;
     gap: 34px;
   }
-  /* Sin sitio para el detalle: quedan año, nombre y stack. */
+  /* En vez de esconder el detalle por falta de ancho, se apila: año y stack
+     arriba, nombre y detalle debajo. Cabe todo y se lee mejor que tres
+     columnas apretadas. */
   .idx > li > button {
-    grid-template-columns: 62px minmax(0, 1fr) auto;
-    gap: 0 16px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "anio stack"
+      "nombre nombre"
+      "detalle detalle";
+    gap: 3px 12px;
+    padding: 15px 0;
+  }
+  .idx .yr {
+    grid-area: anio;
+  }
+  .idx .st {
+    grid-area: stack;
+    text-align: right;
+  }
+  .idx .nm {
+    grid-area: nombre;
   }
   .idx .ds {
-    display: none;
+    grid-area: detalle;
+    display: block;
+    padding-left: 0;
+    font-size: 13.5px;
+    line-height: 1.5;
   }
   .m {
     border-right: none;
@@ -1701,5 +1728,98 @@
   }
   .nav nav {
     display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Dedo, no puntero.
+
+   Todo lo que se pulsa necesita 44px de alto: es el mínimo por debajo del cual
+   se falla el toque.
+
+   Se activa con puntero grueso o con pantalla estrecha, no solo con lo primero:
+   hay navegadores que declaran puntero fino aunque estén en un móvil, y a esa
+   anchura un objetivo cómodo no le estorba a nadie.
+   --------------------------------------------------------------------------- */
+
+@media (pointer: coarse), (max-width: 560px) {
+  .read,
+  .nav .cta,
+  .dock a,
+  .pie a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  .dock a,
+  .nav .cta {
+    justify-content: center;
+  }
+  /* Los enlaces del pie iban a 16px de alto y pegados entre sí. */
+  .pie {
+    gap: 4px 22px;
+  }
+  .pie a {
+    margin-left: 0;
+    margin-right: 18px;
+  }
+  /* La ✕ del modal medía 32px. */
+  .cerrar {
+    width: 44px;
+    height: 44px;
+    top: 16px;
+    right: 16px;
+  }
+  .modal header {
+    padding-right: 68px;
+  }
+}
+
+/* Teléfono ------------------------------------------------------------- */
+
+@media (max-width: 560px) {
+  .page {
+    padding: 0 20px;
+  }
+  /* El dock se parte en dos líneas: el texto arriba y los botones cómodos. */
+  .dock {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    padding: 14px;
+    border-radius: 22px;
+    width: 100%;
+    max-width: 320px;
+  }
+  .dock span {
+    text-align: center;
+  }
+  .dock a {
+    padding: 12px 18px;
+    text-align: center;
+  }
+  /* La ficha del proyecto: la etiqueta encima del dato, no al lado. */
+  .ficha,
+  .certs dd {
+    grid-template-columns: 1fr;
+  }
+  .ficha {
+    gap: 10px 0;
+  }
+  .ficha dt {
+    margin-bottom: -6px;
+  }
+  .certs dd {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    padding: 8px 0;
+  }
+  .certs dd i {
+    margin-left: 0;
+  }
+  .pie {
+    flex-direction: column;
+    gap: 12px;
   }
 }
