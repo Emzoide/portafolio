@@ -37,27 +37,34 @@ export const titular = {
 /**
  * `nota` es la del sitio; `corto` la de la tarjeta de compartir, donde no cabe
  * la frase entera. Etiquetas escritas, no la nota recortada a lo bruto.
+ *
+ * `abre` apunta al trabajo que sustenta la cifra —esté destacado o en el
+ * archivo— para que ningún número quede sin explicación a un clic.
  */
 export const metricas = [
   {
     valor: "900 h",
     nota: "Devueltas al mes tras digitalizar la gestión documental",
     corto: "Horas devueltas al mes",
+    abre: "digitalizacion-documental",
   },
   {
     valor: "40 h",
     nota: "De reportes manuales eliminadas al mes por agentes",
     corto: "Reportes manuales eliminados",
+    abre: "agentes-financieros",
   },
   {
     valor: "−40 %",
     nota: "Tiempo de respuesta a prospectos con el chatbot en el CRM",
     corto: "Tiempo de respuesta",
+    abre: "chatbot-comercial",
   },
   {
     valor: "+20 %",
-    nota: "Entrada de leads tras rehacer los módulos comerciales",
+    nota: "Entrada de leads tras optimizar el sitio comercial",
     corto: "Entrada de leads",
+    abre: "sitio-comercial",
   },
 ]
 
@@ -412,44 +419,96 @@ export const proyectos: Proyecto[] = [
 
 /**
  * Lo demás de Interamericana, mencionado sin desarrollar. Tres casos completos
- * y una lista pesan más que cinco casos compitiendo entre ellos.
+ * y una lista pesan más que seis casos compitiendo entre ellos.
+ *
+ * Cada entrada abre una nota corta —solo texto, sin capturas— para que se pueda
+ * ampliar sin robarle protagonismo a los casos destacados.
  */
-export const archivo = [
+export type Nota = {
+  slug: string
+  anio: string
+  nombre: string
+  detalle: string
+  stack: string
+  contexto: string
+  parrafos: string[]
+}
+
+export const archivo: Nota[] = [
   {
+    slug: "crm-unificado",
     anio: "2025",
     nombre: "CRM comercial unificado",
     detalle: "Agendamiento, prospectos, postventa y facturación conectados al ERP por API REST",
     stack: "Laravel · React",
+    contexto: "Interamericana Norte · En producción",
+    parrafos: [
+      "La operación comercial vivía repartida entre el sistema de agendamiento, el ERP y varias hojas sueltas, y el mismo dato se escribía en cada una.",
+      "Junté agendamiento, prospectos, postventa y facturación en un solo ecosistema conectado al ERP por API REST. Una cita agendada crea sola su orden de trabajo, su vehículo y su cliente: nadie vuelve a escribir la placa dos veces.",
+    ],
   },
   {
+    slug: "digitalizacion-documental",
     anio: "2025",
     nombre: "Digitalización documental",
     detalle: "Diez horas al mes recuperadas por cada uno de los noventa asesores",
     stack: "PHP · S3",
+    contexto: "Interamericana Norte · En producción",
+    parrafos: [
+      "Cada venta movía una carpeta de papel que pasaba por varias manos para juntar firmas y aprobaciones. El expediente viajaba, esperaba y a veces se perdía.",
+      "Lo reemplacé por documentos digitales con flujo de aprobación por roles: cada quien ve lo que le toca y aprueba desde donde esté. El asesor dejó de perseguir papeles.",
+      "Son unas diez horas al mes recuperadas por asesor. En un equipo de noventa, alrededor de 900 horas mensuales que vuelven a la venta.",
+    ],
   },
   {
+    slug: "plataforma-integraciones",
     anio: "2025",
     nombre: "Plataforma de integraciones",
     detalle: "Un punto de entrada único para CRM, agendamiento y proveedores externos",
     stack: "FastAPI",
+    contexto: "Interamericana Norte · En producción",
+    parrafos: [
+      "Cada proveedor nuevo significaba un puente a medida, y cada puente había que mantenerlo aparte.",
+      "Construí una plataforma que centraliza esas conexiones: el CRM, el sistema de agendamiento y los proveedores externos entran por el mismo sitio. Sumar uno nuevo dejó de ser un proyecto.",
+    ],
   },
   {
+    slug: "chatbot-comercial",
     anio: "2025",
     nombre: "Chatbot comercial con IA",
     detalle: "Atiende fuera de horario y escala a un humano cuando corresponde",
     stack: "Python",
+    contexto: "Interamericana Norte · En producción",
+    parrafos: [
+      "Un prospecto que escribía de noche o en fin de semana esperaba al día siguiente, y en venta esa espera cuesta.",
+      "El asistente atiende desde el primer mensaje, resuelve lo que puede y escala a un asesor cuando la conversación lo pide, sin dejar al cliente esperando a que alguien abra la oficina.",
+      "El tiempo de respuesta a un prospecto nuevo bajó alrededor de un 40 %.",
+    ],
   },
   {
+    slug: "catalogo-digital",
     anio: "2024",
     nombre: "Catálogo digital interactivo",
     detalle: "Visualización de vehículos con panel administrativo propio",
     stack: "Laravel · JS",
+    contexto: "Interamericana Norte · En producción",
+    parrafos: [
+      "El catálogo de la web dependía de que alguien de sistemas lo tocara cada vez que cambiaba un precio o entraba una versión nueva.",
+      "Le di al equipo comercial su propio panel: ahora publican y actualizan sin intermediarios, y el catálogo deja de quedarse viejo.",
+    ],
   },
   {
+    slug: "sitio-comercial",
     anio: "2024",
     nombre: "Sitio comercial y microservicios",
-    detalle: "Core Web Vitals de 61 a 90 y nuevos módulos de venta",
+    detalle: "Core Web Vitals de 61 a 90 y nuevos apartados de venta",
     stack: "JS · Angular",
+    contexto: "Interamericana Norte · En producción",
+    parrafos: [
+      "El sitio cargaba lento y perdía visitas antes de que llegaran a ver un vehículo.",
+      "Trabajé el rendimiento —los Core Web Vitals pasaron de 61 a 90— y sumé apartados comerciales nuevos apoyados en microservicios, para que cada uno se pudiera cambiar sin tocar el resto.",
+      "La entrada de leads subió alrededor de un 20 %.",
+    ],
   },
 ]
 

@@ -3,6 +3,8 @@ import { Grain } from "@/components/site/grain"
 import { Navegacion } from "@/components/site/navegacion"
 import { VidrioLiquido } from "@/components/site/vidrio-liquido"
 import { CasoModal } from "@/components/site/caso-modal"
+import { ArchivoLista } from "@/components/site/archivo-lista"
+import { Cifra } from "@/components/site/cifra"
 import { Captura } from "@/components/site/captura"
 import { Lupa } from "@/components/site/lupa"
 import { GlassSpecular } from "@/components/site/glass-specular"
@@ -67,11 +69,10 @@ export default function Home() {
 
           <div className="strip glass">
             <div className="in">
+              {/* Cada cifra abre el trabajo que la sustenta: ningún número
+                  queda sin explicación a un clic. */}
               {metricas.map((m) => (
-                <div className="m" key={m.valor}>
-                  <b>{m.valor}</b>
-                  <span>{m.nota}</span>
-                </div>
+                <Cifra key={m.valor} valor={m.valor} nota={m.nota} abre={m.abre} />
               ))}
             </div>
           </div>
@@ -141,18 +142,9 @@ export default function Home() {
             </article>
           ))}
 
-          <table className="idx">
-            <tbody>
-              {archivo.map((a) => (
-                <tr key={a.nombre}>
-                  <td className="yr">{a.anio}</td>
-                  <td className="nm">{a.nombre}</td>
-                  <td className="ds">{a.detalle}</td>
-                  <td className="st">{a.stack}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          {/* El archivo también se puede abrir: cada entrada tiene su ficha
+              corta, solo texto, para no competir con los casos destacados. */}
+          <ArchivoLista entradas={archivo} />
         </section>
 
         <section className="about" id="sobre-mi">

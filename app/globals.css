@@ -582,12 +582,32 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
 }
+/* Cada cifra es un botón que abre el trabajo que la sustenta. */
 .m {
-  padding: 24px 26px;
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
   border-right: 1px solid var(--hair);
+  padding: 24px 26px;
+  cursor: pointer;
+  border-radius: 14px;
+  transition: background 0.25s ease;
 }
 .m:last-child {
   border-right: none;
+}
+.m:hover {
+  background: color-mix(in srgb, var(--mist) 6%, transparent);
+}
+.m:hover b {
+  color: var(--accent-lit);
+}
+.m b {
+  transition: color 0.25s ease;
 }
 .m b {
   display: block;
@@ -900,6 +920,21 @@
 }
 .modalcuerpo .ficha {
   margin-top: 30px;
+}
+
+/* La ficha del archivo: más angosta que un caso completo, para que se note que
+   es una nota y no un caso. */
+.modalin.nota {
+  max-width: 560px;
+}
+.modalin.nota .modalcuerpo > p {
+  margin: 0 0 14px;
+  font-size: 15px;
+  color: var(--dim);
+  max-width: 58ch;
+}
+.modalin.nota .modalcuerpo > p:last-of-type {
+  margin-bottom: 0;
 }
 
 /* En móvil deja de ser burbuja y pasa a ser hoja: pegada abajo, a todo el ancho */
@@ -1238,36 +1273,56 @@
 
 /* Archivo ---------------------------------------------------------------- */
 
+/* El archivo. Cada fila es un botón que abre su ficha corta; el grid mantiene
+   las columnas alineadas como cuando era una tabla. */
 .idx {
+  list-style: none;
+  margin: 6px 0 0;
+  padding: 0;
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 6px;
 }
-.idx td {
-  padding: 18px 0;
-  border-bottom: 1px solid var(--hair);
-  vertical-align: baseline;
+.idx > li + li > button {
+  border-top: 1px solid var(--hair);
 }
-.idx tr {
+.idx > li > button {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr) minmax(0, 1.5fr) auto;
+  align-items: baseline;
+  gap: 0 24px;
+  width: 100%;
+  padding: 18px 12px 18px 10px;
+  margin-left: -10px;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
   transition: background 0.2s;
 }
-.idx tr:hover {
+.idx > li:last-child > button {
+  border-bottom: 1px solid var(--hair);
+}
+.idx > li > button:hover {
   background: color-mix(in srgb, var(--mist) 4%, transparent);
+}
+.idx > li > button:hover .nm {
+  color: var(--accent-lit);
 }
 .idx .yr {
   font-family: var(--font-data), monospace;
   font-size: 11.5px;
   color: var(--faint);
-  width: 70px;
   white-space: nowrap;
 }
 .idx .nm {
   font-size: 16px;
+  transition: color 0.2s;
 }
 .idx .ds {
   color: var(--dim);
   font-size: 14.5px;
-  padding-left: 24px;
 }
 .idx .st {
   font-family: var(--font-data), monospace;
@@ -1624,6 +1679,11 @@
   .about {
     grid-template-columns: 1fr;
     gap: 34px;
+  }
+  /* Sin sitio para el detalle: quedan año, nombre y stack. */
+  .idx > li > button {
+    grid-template-columns: 62px minmax(0, 1fr) auto;
+    gap: 0 16px;
   }
   .idx .ds {
     display: none;

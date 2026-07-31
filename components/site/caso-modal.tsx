@@ -1,8 +1,8 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
 import type { Proyecto } from "@/lib/content"
 import { Captura } from "@/components/site/captura"
+import { useDialogo } from "./dialogo"
 
 /**
  * El caso, en una burbuja de vidrio flotando sobre la página.
@@ -12,44 +12,10 @@ import { Captura } from "@/components/site/captura"
  * gratis, sin librerías ni trampas de accesibilidad.
  */
 export function CasoModal({ proyecto }: { proyecto: Proyecto }) {
-  const ref = useRef<HTMLDialogElement>(null)
-  const [abierto, setAbierto] = useState(false)
+  const { ref, abrir, cerrar } = useDialogo(proyecto.slug)
   const caso = proyecto.caso
 
-  // El fondo no debe correr mientras la burbuja está abierta.
-  useEffect(() => {
-    document.documentElement.style.overflow = abierto ? "hidden" : ""
-    return () => {
-      document.documentElement.style.overflow = ""
-    }
-  }, [abierto])
-
-  /**
-   * Observamos el atributo `open` en vez de escuchar el evento `close`.
-   *
-   * `close` no burbujea, así que la delegación de React no lo ve y la prop
-   * onClose no es fiable; además hay entornos donde ni siquiera se dispara.
-   * El atributo, en cambio, siempre desaparece al cerrar — con Escape, con el
-   * botón o con clic en el fondo. Sin esto, cerrar dejaba la página bloqueada
-   * sin scroll, que es el peor fallo posible de un modal.
-   */
-  useEffect(() => {
-    const dialog = ref.current
-    if (!dialog) return
-    const observador = new MutationObserver(() => setAbierto(dialog.open))
-    observador.observe(dialog, { attributes: true, attributeFilter: ["open"] })
-    return () => observador.disconnect()
-  }, [])
-
   if (!caso) return null
-
-  const abrir = () => {
-    ref.current?.showModal()
-    setAbierto(true)
-  }
-  const cerrar = () => {
-    ref.current?.close()
-  }
 
   return (
     <>
